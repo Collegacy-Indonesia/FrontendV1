@@ -1,6 +1,6 @@
-# create-svelte
+# Collegacy Website Version 1
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
+This is a website for Collegacy Indonesia period of 2021, the main purpose of this website is to serve any need that can be provided by website for Collegacy's events.
 
 ## Creating a project
 
