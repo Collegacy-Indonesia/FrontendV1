@@ -1,15 +1,31 @@
+<script context="module">
+	export async function load({ page }) {
+		/**
+		 * @type {import('@sveltejs/kit').Load}
+		 */
+		return {
+			props: { page }
+		};
+	}
+</script>
+
 <script>
+	export let page;
+	const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+	const parsePathToDisplay = (path) =>
+		path === '/' ? 'Home' : capitalizeFirstLetter(path.slice(1, path.length)).split('/')[0];
 	let open = false;
 	let btnClass = 'bx bx-menu-alt-right';
 	const toLink = (icon, content, to) => ({ icon, content, to });
 	let links = [
-		toLink('bx-user', 'User', '/'),
+		toLink('bx-user', 'Profile', '/profile'),
 		toLink('bx-chat', 'Messages', '/'),
 		toLink('bx-pie-chart-alt-2', 'Analytics', '/'),
 		toLink('bx-cog', 'Setting', '/')
 	];
 	$: sidebarClass = open ? 'sidebar open' : 'sidebar';
 	$: btnClass = open ? 'bx bx-menu-alt-right' : 'bx bx-menu';
+	$: pageDisplayName = parsePathToDisplay(page.path);
 </script>
 
 <div class={sidebarClass}>
@@ -20,7 +36,7 @@
 	</div>
 	<ul class="nav-list">
 		<li>
-			<i class="bx bx-search" on:click={() => (open = !open)} />
+			<i class="bx bx-search" />
 			<input type="text" placeholder="Search..." />
 			<span class="tooltip">Search</span>
 		</li>
@@ -34,7 +50,7 @@
 		{#each links as link}
 			<li>
 				<a href={link.to}>
-					<i class={`bx ${link.icon}`} on:click={() => (open = !open)} />
+					<i class={`bx ${link.icon}`} />
 					<span class="links_name">{link.content}</span>
 				</a>
 				<span class="tooltip">{link.content}</span>
@@ -44,7 +60,7 @@
 </div>
 <section class="home-section">
 	<div class="navbar" style={open ? 'width: calc(100% - 250px);' : ''}>
-		<span>Tuesday, 12 June 2020</span>
+		<span>{pageDisplayName}</span>
 		<a href="login">
 			<i class="bx bxs-log-in" />
 			<span class="links_name">Login</span>

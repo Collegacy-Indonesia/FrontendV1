@@ -1,37 +1,55 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition';
+	import { fly, fade } from 'svelte/transition';
+	import { elasticOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
 	import Shape from '../components/shared/shapes.svelte';
 
-	let window;
 	let ready = false;
-	let name: string = 'Anonymous';
+	let moveY;
 	let keyframes = [...Array(10).keys()].map((i) => ({
 		x: -100,
 		delay: 500 * i + 1,
 		duration: 1000
 	}));
-	console.log(window);
-	$: something = name + ' ' + 'wtf';
 	onMount(() => (ready = true));
 </script>
+
+<svelte:window bind:scrollY={moveY} />
+<svelte:head>
+	<title>Collegacy Indonesia Website</title>
+</svelte:head>
 
 <div class="page">
 	{#if ready}
 		<div class="container">
 			<Shape
-				animation={{ ...keyframes[3], y: -10, x: 0 }}
+				animation={{ ...keyframes[3], y: -100, x: 0, duration: 2000, easing: elasticOut }}
 				type="circle"
 				y="-5px"
 				x="80%"
 				color="#bf97ac"
+				{moveY}
 			/>
-			<Shape animation={keyframes[4]} type="triangle" y="30%" x="20%" color="" />
-			<Shape animation={keyframes[5]} type="innercircle" y="90%" x="70%" color="" />
+			<Shape
+				animation={{ ...keyframes[4], y: 0, x: -50, duration: 2000, easing: elasticOut }}
+				type="triangle"
+				y="30%"
+				x="20%"
+				color=""
+				{moveY}
+			/>
+			<Shape
+				animation={{ ...keyframes[5], y: 50, x: 0, duration: 2000, easing: elasticOut }}
+				type="innercircle"
+				y="90%"
+				x="70%"
+				color=""
+				{moveY}
+			/>
 			<div class="hero">
-				<h1 class="title" transition:fly={keyframes[0]}>Collegacy Indonesia</h1>
+				<h1 class="title" in:fly={keyframes[0]}>Collegacy Indonesia</h1>
 				<br />
-				<p transition:fly={keyframes[1]}>
+				<p in:fly={keyframes[1]}>
 					Student Organization committed to enhance in-demand skills in today's workforce to create
 					well developed future leaders <span class="tags">#LeaveYourMark</span>
 				</p>
@@ -72,6 +90,13 @@
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+	* {
+		user-select: none;
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		-webkit-user-select: none;
+		-o-user-select: none;
+	}
 	.page {
 		background: #e4e9f7;
 	}
