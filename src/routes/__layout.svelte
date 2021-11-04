@@ -19,8 +19,9 @@
 	const toLink = (icon, content, to) => ({ icon, content, to });
 	let links = [
 		toLink('bx-user', 'Profile', '/profile'),
+		toLink('bx-calendar-event', 'Events', '/'),
+		toLink('bx-mail-send', 'Mails', '/'),
 		toLink('bx-chat', 'Messages', '/'),
-		toLink('bx-pie-chart-alt-2', 'Analytics', '/'),
 		toLink('bx-cog', 'Setting', '/')
 	];
 	$: sidebarClass = open ? 'sidebar open' : 'sidebar';
