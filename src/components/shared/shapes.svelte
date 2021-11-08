@@ -64,8 +64,8 @@
 <style>
 	.circle {
 		position: absolute;
-		width: 150px;
-		height: 150px;
+		width: 9.375rem;
+		height: 9.375rem;
 		background: red;
 		border-radius: 50%;
 	}
@@ -74,16 +74,16 @@
 		position: absolute;
 		width: 0;
 		height: 0;
-		border-top: 125px solid transparent;
-		border-left: 200px solid yellow;
-		border-bottom: 125px solid transparent;
+		border-top: 7.8125rem solid transparent;
+		border-left: 12.5rem solid yellow;
+		border-bottom: 7.8125rem solid transparent;
 	}
 	.innercircle {
 		position: absolute;
 		border-radius: 50%;
-		box-shadow: 0px 0px 0px 30px transparent, 0px 0px 0px 40px yellow;
-		width: 100px;
-		height: 100px;
+		box-shadow: 0rem 0rem 0rem 1.875rem transparent, 0rem 0rem 0rem 2.5rem yellow;
+		width: 6.25rem;
+		height: 6.25rem;
 		margin: 3em;
 	}
 	.grabbable {

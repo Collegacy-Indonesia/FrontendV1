@@ -40,25 +40,25 @@
 		flex-direction: column;
 		gap: 0.5rem;
 		background: #11101d;
-		padding: 40px;
+		padding: 2.5em;
 		width: 90%;
-		max-width: 600px;
+		max-width: 37.5em;
 	}
 	.form-box .header-text {
-		font-size: 32px;
+		font-size: 2em;
 		font-weight: 600;
-		padding-bottom: 30px;
+		padding-bottom: 1.875em;
 		text-align: center;
 	}
 	.form-box input {
 		background: #1d1b31;
 		color: #fff;
-		margin: 10px 0px;
+		margin: 0.625em 0em;
 		border: none;
-		padding: 10px;
+		padding: 0.625em;
 		border-radius: 5px;
 		width: 100%;
-		font-size: 18px;
+		font-size: 1.125em;
 		font-family: poppins;
 	}
 	.form-box input[type='checkbox'] {
@@ -71,8 +71,8 @@
 		border-radius: 5px;
 		cursor: pointer;
 		width: 100%;
-		font-size: 18px;
-		padding: 10px;
-		margin: 20px 0px;
+		font-size: 1.125em;
+		padding: 0.625em;
+		margin: 1.25em 0em;
 	}
 </style>
