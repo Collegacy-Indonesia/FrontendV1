@@ -3,6 +3,7 @@
 	import { elasticOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
 	import Shape from '../components/shared/shapes.svelte';
+	import ApiService from "../utils/api";
 
 	let ready = false;
 	let moveY;
@@ -12,6 +13,10 @@
 		duration: 1000
 	}));
 	onMount(() => (ready = true));
+	const handleLogout = () => {
+		const apiSrv = new ApiService();
+		apiSrv.logout();
+	}
 </script>
 
 <svelte:window bind:scrollY={moveY} />
@@ -54,6 +59,11 @@
 					well developed future leaders <span class="tags">#LeaveYourMark</span>
 				</p>
 			</div>
+		</div>
+		<div>
+			<button on:click={handleLogout}>
+				LOGOUT
+			</button>
 		</div>
 
 		<div>nananan</div>
