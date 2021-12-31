@@ -31,9 +31,11 @@ class ApiService {
       console.log(data);
       this.setLocalStorage(data.token, data.refresh_token);
       this.displayToken();
+      return true;
     } catch (err) {
       console.log(err);
       alert(this.errMsg);
+      return false;
     }
   }
   async getData(fromRefreshToken=false) {
@@ -60,9 +62,42 @@ class ApiService {
       console.log(err);
       
       if (fromRefreshToken) {
-        return null;
+        return undefined;
       } else {
-        return this.refreshToken();
+        await this.refreshToken();
+        return this.getData(true);
+      }
+    }
+  }
+  async getUserProfile(afterRefreshToken=false) {
+    if (!this.hasToken()) {
+      return undefined;
+    }
+
+    const token = localStorage.getItem('token');
+    try {
+      const res = await axios({
+        method: "POST",
+        url: this.API_URL + this.path,
+        headers: { 
+          'Access-Control-Allow-Origin' : '*',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        responseType: "json",
+        data: {
+          token
+        },
+      });
+      console.log(res);
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      if (afterRefreshToken) {
+        return undefined;
+      } else {
+        await this.refreshToken();
+        return this.getUserProfile(true);
       }
     }
   }
@@ -84,11 +119,8 @@ class ApiService {
       console.log(data);
       this.setLocalStorage(data.token, data.refresh_token);
       this.displayToken();
-
-      return this.getData(true);
     } catch (err) {
       console.log(err);
-      return null;
     }
   }
   logout() {
@@ -97,7 +129,7 @@ class ApiService {
 		window.location.href = '/'; 
   }
   hasToken() {
-    return localStorage.getItem("token");
+    return !!(localStorage.getItem("token"));
   }
   setLocalStorage(token: string, refresh_token: string) {
     localStorage.setItem("token", token);

@@ -3,7 +3,7 @@
 	import { elasticOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
 	import Shape from '../components/shared/shapes.svelte';
-	import ApiService from "../utils/api";
+	import { getUserProfile, logout, userContext, useUserContext } from "../contexts/userContext";
 
 	let ready = false;
 	let moveY;
@@ -12,10 +12,12 @@
 		delay: 500 * i + 1,
 		duration: 1000
 	}));
-	onMount(() => (ready = true));
+	onMount(() => {
+		ready = true;
+		getUserProfile();
+	});
 	const handleLogout = () => {
-		const apiSrv = new ApiService();
-		apiSrv.logout();
+		logout();
 	}
 </script>
 
@@ -59,12 +61,26 @@
 					well developed future leaders <span class="tags">#LeaveYourMark</span>
 				</p>
 			</div>
+			<div>
+				<h1>INFORMATION</h1>
+				{#if $userContext === undefined}
+					<h1>Please Login</h1>
+				{:else}
+					{#if $userContext === null}
+						<h1>...loading</h1>
+					{:else}
+						<h1>Hi {$userContext.email}!</h1>
+						<h2>{JSON.stringify($userContext)}</h2>
+					{/if}
+				{/if}
+			</div>
+			<div>
+				<button on:click={handleLogout}>
+					LOGOUT
+				</button>
+			</div>
 		</div>
-		<div>
-			<button on:click={handleLogout}>
-				LOGOUT
-			</button>
-		</div>
+
 
 		<div>nananan</div>
 		<div>nananan</div>

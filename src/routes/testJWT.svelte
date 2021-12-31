@@ -1,5 +1,6 @@
 <script>
   import ApiService from "../utils/api";
+  import ContextTest from "../components/shared/contextTest.svelte";
 
   const handleClick = async () => {
     console.log("clicked");
@@ -25,8 +26,9 @@
   <br />
   <h1>test-jwt</h1>
   <button on:click={handleClick} class="big-btn">
-    CLICK ME
+    GET USERS
   </button>
+  <ContextTest />
 </div>
 
 <style>

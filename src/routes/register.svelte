@@ -1,16 +1,14 @@
 <script>
-	// import { scale } from 'svelte/transition';
-	import ApiService from "../utils/api";
+	import { register } from "../contexts/userContext";
 	
 	let email = '';
 	let password = '';
 
 	const handleSubmit = async () => {
-		const errMsg = "Your email has been used. Please login";
-		const apiSrv = new ApiService("/auth/register",errMsg);
-		await apiSrv.reqToken(email,password);
-		console.log("redirecting");
-		window.location.replace('/');
+		if (await register(email, password)) {
+			console.log("redirecting");
+			window.location.href = '/';
+		}
 	}
 </script>
 
