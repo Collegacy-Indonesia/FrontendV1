@@ -6212,7 +6212,14 @@ var manifest = {
       params: empty,
       a: ["src/routes/__layout.svelte", "src/routes/login.svelte"],
       b: [".svelte-kit/build/components/error.svelte"]
-    }
+    },
+    {
+      type: "page",
+      pattern: /^\/test-jwt\/?$/,
+      params: empty,
+      a: ["src/routes/__layout.svelte", "src/routes/testJWT.svelte"],
+      b: [".svelte-kit/build/components/error.svelte"]
+    },
   ]
 };
 var get_hooks = (hooks) => ({

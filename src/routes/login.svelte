@@ -1,19 +1,30 @@
 <script>
-	import { scale } from 'svelte/transition';
+	import { login } from "../contexts/userContext";
+	
+	let email = '';
+	let password = '';
+
+	const handleSubmit = async () => {
+		if (await login(email, password)) {
+			console.log("redirecting");
+			window.location.href = '/';
+		}
+	}
+
 </script>
 
 <svelte:head>
 	<title>Login Page</title>
 </svelte:head>
 <div class="container">
-	<div in:scale class="form-box">
+	<form on:submit|preventDefault={handleSubmit} class="form-box">
 		<div class="header-text">Login</div>
-		<input placeholder="Your Email Address" type="text" />
-		<input placeholder="Your Password" type="password" />
+		<input placeholder="Your Email Address" type="text" bind:value={email} />
+		<input placeholder="Your Password" type="password" bind:value={password} />
 		<input id="terms" type="checkbox" />
-		<button>login</button>
+		<button type="submit">login</button>
 		<span>Don't have an account? <a href="/register">Register</a></span>
-	</div>
+	</form>
 </div>
 
 <style>
