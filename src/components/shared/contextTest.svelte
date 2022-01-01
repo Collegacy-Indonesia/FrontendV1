@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { getUserProfile, logout, userContext } from '../../contexts/userContext';
+	import { getUserProfile, logout, userContext } from "../../contexts/userContext";
 
 	onMount(() => {
 		getUserProfile();
