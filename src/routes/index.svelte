@@ -3,7 +3,7 @@
 	import { elasticOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
 	import Shape from '../components/shared/shapes.svelte';
-	import { getUserProfile, logout, userContext, useUserContext } from "../contexts/userContext";
+	import { getUserProfile, logout, userContext } from '../contexts/userContext';
 
 	let ready = false;
 	let moveY;
@@ -18,7 +18,7 @@
 	});
 	const handleLogout = () => {
 		logout();
-	}
+	};
 </script>
 
 <svelte:window bind:scrollY={moveY} />
@@ -65,22 +65,17 @@
 				<h1>INFORMATION</h1>
 				{#if $userContext === undefined}
 					<h1>Please Login</h1>
+				{:else if $userContext === null}
+					<h1>...loading</h1>
 				{:else}
-					{#if $userContext === null}
-						<h1>...loading</h1>
-					{:else}
-						<h1>Hi {$userContext.email}!</h1>
-						<h2>{JSON.stringify($userContext)}</h2>
-					{/if}
+					<h1>Hi {$userContext.email}!</h1>
+					<h2>{JSON.stringify($userContext)}</h2>
 				{/if}
 			</div>
 			<div>
-				<button on:click={handleLogout}>
-					LOGOUT
-				</button>
+				<button on:click={handleLogout}> LOGOUT </button>
 			</div>
 		</div>
-
 
 		<div>nananan</div>
 		<div>nananan</div>
