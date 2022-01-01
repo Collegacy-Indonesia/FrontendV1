@@ -1,10 +1,10 @@
 <script context="module">
-	export async function load({ page }) {
+	export async function load({ url }) {
 		/**
 		 * @type {import('@sveltejs/kit').Load}
 		 */
 		return {
-			props: { page }
+			props: { url }
 		};
 	}
 </script>
@@ -13,10 +13,11 @@
 	import { getUserProfile, logout, userContext } from "../contexts/userContext";
 	import { onMount } from "svelte"
 
-	export let page;
+	export let url;
 	const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
-	const parsePathToDisplay = (path) =>
+	const parsePathToDisplay = (path) => {
 		path === '/' ? 'Home' : capitalizeFirstLetter(path.slice(1, path.length)).split('/')[0];
+	}
 	let open = false;
 	let btnClass = 'bx bx-menu-alt-right';
 	const toLink = (icon, content, to) => ({ icon, content, to });
@@ -29,7 +30,7 @@
 	];
 	$: sidebarClass = open ? 'sidebar open' : 'sidebar';
 	$: btnClass = open ? 'bx bx-menu-alt-right' : 'bx bx-menu';
-	$: pageDisplayName = parsePathToDisplay(page.path);
+	$: pageDisplayName = parsePathToDisplay(url.pathname);
 
 	let width;
 
