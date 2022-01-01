@@ -69,7 +69,6 @@
 		border-radius: 5px;
 		width: 100%;
 		font-size: 18px;
-		font-family: poppins;
 	}
 	.form-box input[type='checkbox'] {
 		display: none;

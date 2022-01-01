@@ -10,6 +10,9 @@
 </script>
 
 <script>
+	import { getUserProfile, logout, userContext } from "../contexts/userContext";
+	import { onMount } from "svelte"
+
 	export let page;
 	const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 	const parsePathToDisplay = (path) =>
@@ -27,15 +30,23 @@
 	$: sidebarClass = open ? 'sidebar open' : 'sidebar';
 	$: btnClass = open ? 'bx bx-menu-alt-right' : 'bx bx-menu';
 	$: pageDisplayName = parsePathToDisplay(page.path);
+
+	let width;
+
+	onMount(() => {
+		getUserProfile();
+	})
 </script>
 
-<div class={sidebarClass}>
+<svelte:window bind:innerWidth={width}/>
+
+<div class={sidebarClass + ((width > 1200) || (open) ? "" : " sidebar-small")}>
 	<div class="logo-details">
 		<i class="bx bxl-c-plus-plus icon" />
 		<div class="logo_name">Collegacy</div>
 		<i class={btnClass} id="btn" on:click={() => (open = !open)} />
 	</div>
-	<ul class="nav-list">
+	<ul class={`nav-list ${(width > 1200) || (open) ? "" : "d-none"}`}>
 		<li>
 			<i class="bx bx-search" />
 			<input type="text" placeholder="Search..." />
@@ -60,23 +71,31 @@
 	</ul>
 </div>
 <section class="home-section">
-	<div class="navbar" style={open ? 'width: calc(100% - 250px);' : ''}>
+	<div class="navbar">
 		<span>{pageDisplayName}</span>
-		<a href="login">
-			<i class="bx bxs-log-in" />
-			<span class="links_name">Login</span>
-		</a>
+		{#if ($userContext === undefined || $userContext === null)}
+			<a href="login">
+				<i class="bx bxs-log-in" />
+				<span class="links_name">Login</span>
+			</a>
+		{:else}
+			<a href="/" class="d-inline-block" on:click={logout}>
+				<i class="bx bxs-log-out" />
+				<span class="links_name">Logout</span>
+			</a>
+		{/if}
 	</div>
-	<slot />
+	<slot style={width > 1200 ? "padding-left: 78px;" : ""}/>
 </section>
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+	@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600;700&display=swap');
 	* {
 		margin: 0;
 		padding: 0;
 		box-sizing: border-box;
-		font-family: 'Poppins', sans-serif;
+		font-family: 'Raleway', sans-serif;
 	}
 	.sidebar {
 		position: fixed;
@@ -88,6 +107,9 @@
 		padding: 6px 14px;
 		z-index: 99;
 		transition: all 0.5s ease;
+	}
+	.sidebar-small {
+		height: 60px;
 	}
 	.sidebar.open {
 		width: 250px;
@@ -260,18 +282,11 @@
 	.home-section {
 		padding: 0;
 		margin: 0;
-		position: relative;
-		background: #e4e9f7;
+		background: #F7F5E9;
 		min-height: 100vh;
-		top: 0;
-		left: 78px;
-		width: calc(100% - 78px);
+		width: 100%;
 		transition: all 0.5s ease;
 		z-index: 2;
-	}
-	.sidebar.open ~ .home-section {
-		left: 250px;
-		width: calc(100% - 250px);
 	}
 	.home-section .text {
 		display: inline-block;
@@ -282,7 +297,8 @@
 	}
 	.navbar {
 		position: fixed;
-		width: calc(100% - 78px);
+		top: 0;
+		width: 100%;
 		z-index: 10;
 		padding: 0.3rem 1rem;
 		display: flex;
