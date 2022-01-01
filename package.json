@@ -24,6 +24,12 @@
   "type": "module",
   "dependencies": {
     "axios": "^0.24.0",
-    "svelte-watch-resize": "^1.0.3"
+    "svelte-watch-resize": "^1.0.3",
+    "bulma": "^0.9.3",
+    "node-sass": "^7.0.1",
+    "rollup-plugin-postcss": "^4.0.2",
+    "sass": "^1.45.2",
+    "svelma": "^0.4.5",
+    "svelte-formly": "^1.1.1"
   }
 }

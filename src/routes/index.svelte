@@ -20,7 +20,7 @@
 	});
 	const handleLogout = () => {
 		logout();
-	}
+	};
 </script>
 
 <svelte:window bind:scrollY={moveY} />
