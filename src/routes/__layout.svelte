@@ -10,15 +10,15 @@
 </script>
 
 <script>
-	import { getUserProfile, logout, userContext } from "../contexts/userContext";
-	import { onMount } from "svelte"
-	import Footer from "../components/shared/footer.svelte";
+	import { getUserProfile, logout, userContext } from '../contexts/userContext';
+	import { onMount } from 'svelte';
+	import Footer from '../components/shared/footer.svelte';
 
 	export let url;
 	const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 	const parsePathToDisplay = (path) => {
 		path === '/' ? 'Home' : capitalizeFirstLetter(path.slice(1, path.length)).split('/')[0];
-	}
+	};
 	let open = false;
 	let btnClass = 'bx bx-menu-alt-right';
 	const toLink = (icon, content, to) => ({ icon, content, to });
@@ -37,18 +37,18 @@
 
 	onMount(() => {
 		getUserProfile();
-	})
+	});
 </script>
 
-<svelte:window bind:innerWidth={width}/>
+<svelte:window bind:innerWidth={width} />
 
-<div class={sidebarClass + ((width > 1200) || (open) ? "" : " sidebar-small")}>
+<div class={sidebarClass + (width > 1200 || open ? '' : ' sidebar-small')}>
 	<div class="logo-details">
 		<i class="bx bxl-c-plus-plus icon" />
 		<div class="logo_name">Collegacy</div>
 		<i class={btnClass} id="btn" on:click={() => (open = !open)} />
 	</div>
-	<ul class={`nav-list ${(width > 1200) || (open) ? "" : "d-none"}`}>
+	<ul class={`nav-list ${width > 1200 || open ? '' : 'd-none'}`}>
 		<li>
 			<i class="bx bx-search" />
 			<input type="text" placeholder="Search..." />
@@ -73,21 +73,23 @@
 	</ul>
 </div>
 <section class="home-section">
-	<div class="navbar">
-		<span>{pageDisplayName}</span>
-		{#if ($userContext === undefined || $userContext === null)}
-			<a href="login">
-				<i class="bx bxs-log-in" />
-				<span class="links_name">Login</span>
-			</a>
-		{:else}
-			<a href="/" class="d-inline-block" on:click={logout}>
-				<i class="bx bxs-log-out" />
-				<span class="links_name">Logout</span>
-			</a>
+	<div class="navbar" style={open ? 'width: calc(100% - 250px);' : 'width:calc(100% - 77px);'}>
+		{#if width > 1200}
+			<span>{pageDisplayName}</span>
+			{#if $userContext === undefined || $userContext === null}
+				<a href="login">
+					<i class="bx bxs-log-in" />
+					<span class="links_name">Login</span>
+				</a>
+			{:else}
+				<a href="/" class="d-inline-block" on:click={logout}>
+					<i class="bx bxs-log-out" />
+					<span class="links_name">Logout</span>
+				</a>
+			{/if}
 		{/if}
 	</div>
-	<slot style={width > 1200 ? "padding-left: 78px;" : ""}/>
+	<slot style={width > 1200 ? 'padding-left: 78px;' : ''} />
 	<Footer />
 </section>
 
@@ -285,7 +287,7 @@
 	.home-section {
 		padding: 0;
 		margin: 0;
-		background: #F7F5E9;
+		background: #f7f5e9;
 		min-height: 100vh;
 		width: 100%;
 		transition: all 0.5s ease;
@@ -301,6 +303,7 @@
 	.navbar {
 		position: fixed;
 		top: 0;
+		right: 0;
 		width: 100%;
 		z-index: 10;
 		padding: 0.3rem 1rem;
