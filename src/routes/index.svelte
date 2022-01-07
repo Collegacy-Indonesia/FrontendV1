@@ -5,6 +5,9 @@
 	import Shape from '../components/shared/shapes.svelte';
 	import Intro from '../components/home/intro.svelte';
 	import OurValue from "../components/home/our-value.svelte";
+	import OurEvents from "../components/home/our-events.svelte";
+	import InstagramPost from '../components/home/instagram-post.svelte';
+	import OurTeams from "../components/home/our-teams.svelte";
 	import { getUserProfile, logout, userContext } from "../contexts/userContext";
 
 	let ready = false;
@@ -31,6 +34,9 @@
 <div class="page">
 	<Intro />
 	<OurValue />
+	<OurEvents />
+	<InstagramPost />
+	<OurTeams />
 </div>
 
 <style>

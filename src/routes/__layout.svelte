@@ -12,6 +12,7 @@
 <script>
 	import { getUserProfile, logout, userContext } from "../contexts/userContext";
 	import { onMount } from "svelte"
+	import Footer from "../components/shared/footer.svelte";
 
 	export let url;
 	const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
@@ -87,6 +88,7 @@
 		{/if}
 	</div>
 	<slot style={width > 1200 ? "padding-left: 78px;" : ""}/>
+	<Footer />
 </section>
 
 <style>
