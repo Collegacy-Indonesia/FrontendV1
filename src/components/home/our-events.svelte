@@ -3,24 +3,17 @@
 
 	const events = [
 		{
-			desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make",
-			link: '/',
-			img: dummyImg
+			title: 'Bootcamp',
+			desc: 'Collegacy Students Bootcamp is a two-week bootcamp designed to provide knowledge to enthusiastic participants in developing their ideas and innovations. According to our grand theme, "Cultivating the Spirit of Ideation to Shape the Future World for Achieving Sustainable Development Goals", this event aims to empower university students as participants to execute their ideas well with proper planning to make them better.',
+			link: 'https://docs.google.com/forms/d/1mvddAUP4Mw7O_Dt3VOEeEkPSVV2j6BKx2a9JBJo6Hb4/edit?usp=drivesdk',
+			img: '/home/bootcamp.png'
 		},
 		{
+			title: 'Summit',
 			desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make",
+			isComingSoon: true,
 			link: '/',
-			img: dummyImg
-		},
-		{
-			desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make",
-			link: '/',
-			img: dummyImg
-		},
-		{
-			desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make",
-			link: '/',
-			img: dummyImg
+			img: '/home/summit.png'
 		}
 	];
 	let width;
@@ -28,15 +21,16 @@
 
 <svelte:window bind:innerWidth={width} />
 
-<div class={`our-event ${width > 1200 ? 'container-large' : ''}`}>
+<div class={`our-event ${width > 1200 ? 'container-large' : ''}`} id="events">
 	<div
 		id="our-event-carousel"
 		class="carousel slide d-flex flex-column justify-content-center"
 		data-bs-ride="carousel"
+		data-ride="carousel"
 	>
 		<h1 class="text-center">Our Events</h1>
 		<div class="carousel-indicators position-static d-inline-block mx-auto">
-			{#each Array(events.length) as x, idx}
+			{#each events as event, idx}
 				<button
 					type="button"
 					data-bs-target="#our-event-carousel"
@@ -45,22 +39,26 @@
 					aria-current="true"
 					aria-label={`Slide ${idx + 1}`}
 				>
-					Event {idx + 1}
+					{event.title}
 				</button>
 			{/each}
 		</div>
-		<div class="carousel-inner">
-			{#each events as { desc, link, img }, idx}
+		<div class="carousel-inner" style="padding:1rem;">
+			{#each events as { desc, link, img, title, isComingSoon }, idx}
 				<div class={`carousel-item ${idx === 0 ? 'active' : ''}`}>
 					<div
 						class="carousel-item-card d-flex flex-lg-nowrap flex-wrap-reverse justify-content-center align-items-center"
 					>
 						<div class={'carousel-item-card-left ' + (width > 1200 ? '' : 'm-small')}>
-							<h1>Event {idx + 1}</h1>
-							<p class="text-justify">{desc}</p>
-							<a href={link}>
-								<button class="btn btn-more">More</button>
-							</a>
+							<h1>{title}</h1>
+							{#if !isComingSoon}
+								<p class="text-justify">{desc}</p>
+								<a href={link}>
+									<button class="btn btn-more">Register</button>
+								</a>
+							{:else}
+								<p class="text-justify bold">Coming Soon</p>
+							{/if}
 						</div>
 						<div class="carousel-item-card-right my-3 my-lg-0">
 							<img src={img} class="d-block" alt={`Event ${idx + 1} image`} />
@@ -127,12 +125,10 @@
 	}
 	.carousel-item-card-left > p {
 		font-weight: normal;
-		font-size: 2rem;
-		line-height: 135%;
+		font-size: 1.5rem;
 		color: #112131;
 	}
 	.btn-more {
-		width: 10.75rem;
 		height: 3.5rem;
 		background: #000;
 		border-radius: 20px;

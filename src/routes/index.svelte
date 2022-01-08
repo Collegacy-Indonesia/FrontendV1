@@ -2,13 +2,14 @@
 	import { fly, fade } from 'svelte/transition';
 	import { elasticOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
-	import Shape from '../components/shared/shapes.svelte';
 	import Intro from '../components/home/intro.svelte';
-	import OurValue from "../components/home/our-value.svelte";
-	import OurEvents from "../components/home/our-events.svelte";
+	import OurValue from '../components/home/our-value.svelte';
+	import OurEvents from '../components/home/our-events.svelte';
 	import InstagramPost from '../components/home/instagram-post.svelte';
-	import OurTeams from "../components/home/our-teams.svelte";
-	import { getUserProfile, logout, userContext } from "../contexts/userContext";
+	import OurTeams from '../components/home/our-teams.svelte';
+	import SponsorAndMedpar from '../components/home/sponsor-and-medpar.svelte';
+	import { getUserProfile, logout, userContext } from '../contexts/userContext';
+	import SponsorAndMedpar from '../components/home/sponsor-and-medpar.svelte';
 
 	let ready = false;
 	let moveY;
@@ -36,7 +37,8 @@
 	<OurValue />
 	<OurEvents />
 	<InstagramPost />
-	<OurTeams />
+	<!-- <OurTeams /> -->
+	<SponsorAndMedpar />
 </div>
 
 <style>

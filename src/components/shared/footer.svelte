@@ -1,8 +1,8 @@
 <script>
-	const logoCollegacy = '/shared/logo-collegacy.svg';
-	const instagramIcon = '/shared/instagram-icon.svg';
-	const linkedinIcon = '/shared/linkedin-icon.svg';
-	const mailIcon = '/shared/mail-icon.svg';
+	const logoCollegacy = '/shared/logo-collegacy.png';
+	const instagramIcon = '/shared/instagram.svg';
+	const linkedinIcon = '/shared/linkedin.svg';
+	const mailIcon = '/shared/email.svg';
 	let width;
 	const socmeds = [
 		{
@@ -48,7 +48,7 @@
 
 <style>
 	.footer-container {
-		background: #112131;
+		background: #11101d;
 	}
 	.container-large {
 		margin-left: 78px;

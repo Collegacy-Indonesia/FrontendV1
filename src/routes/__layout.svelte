@@ -16,9 +16,8 @@
 
 	export let url;
 	const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
-	const parsePathToDisplay = (path) => {
+	const parsePathToDisplay = (path) =>
 		path === '/' ? 'Home' : capitalizeFirstLetter(path.slice(1, path.length)).split('/')[0];
-	};
 	let open = false;
 	let btnClass = 'bx bx-menu-alt-right';
 	const toLink = (icon, content, to) => ({ icon, content, to });
@@ -73,7 +72,7 @@
 	</ul>
 </div>
 <section class="home-section">
-	<div class="navbar" style={open ? 'width: calc(100% - 250px);' : 'width:calc(100% - 77px);'}>
+	<div class="navbar" style={open ? 'width: calc(100% - 249px);' : 'width:calc(100% - 77px);'}>
 		{#if width > 1200}
 			<span>{pageDisplayName}</span>
 			{#if $userContext === undefined || $userContext === null}

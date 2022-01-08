@@ -1,7 +1,7 @@
 <script>
 	import ApiService from '../utils/api';
 	import ContextTest from '../components/shared/contextTest.svelte';
-	import Form from '../components/shared/formGenerator.svelte';
+	import Form from '../components/shared/form-generator.svelte';
 	import { textArea, text } from '../utils/form_dto';
 
 	const handleClick = async () => {
