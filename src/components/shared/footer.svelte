@@ -1,5 +1,5 @@
 <script>
-	const logoCollegacy = '/shared/logo-collegacy.png';
+	const logoCollegacy = '/shared/logo-collegacy.svg';
 	const instagramIcon = '/shared/instagram.svg';
 	const linkedinIcon = '/shared/linkedin.svg';
 	const mailIcon = '/shared/email.svg';

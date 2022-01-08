@@ -22,11 +22,11 @@
 	let btnClass = 'bx bx-menu-alt-right';
 	const toLink = (icon, content, to) => ({ icon, content, to });
 	let links = [
-		toLink('bx-user', 'Profile', '/profile'),
-		toLink('bx-calendar-event', 'Events', '/'),
-		toLink('bx-mail-send', 'Mails', '/'),
-		toLink('bx-chat', 'Messages', '/'),
-		toLink('bx-cog', 'Setting', '/')
+		// toLink('bx-user', 'Profile', '/profile'),
+		// toLink('bx-calendar-event', 'Events', '/'),
+		// toLink('bx-mail-send', 'Mails', '/'),
+		// toLink('bx-chat', 'Messages', '/'),
+		// toLink('bx-cog', 'Setting', '/')
 	];
 	$: sidebarClass = open ? 'sidebar open' : 'sidebar';
 	$: btnClass = open ? 'bx bx-menu-alt-right' : 'bx bx-menu';
