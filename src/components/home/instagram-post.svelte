@@ -1,6 +1,4 @@
 <script>
-	import axios from 'axios';
-
 	let width;
 	const dummyIgPost = '/home/dummy-ig-post.png';
 	const dummyData = [

@@ -7,7 +7,6 @@
 	import OurEvents from '../components/home/our-events.svelte';
 	import InstagramPost from '../components/home/instagram-post.svelte';
 	import OurTeams from '../components/home/our-teams.svelte';
-	import SponsorAndMedpar from '../components/home/sponsor-and-medpar.svelte';
 	import { getUserProfile, logout, userContext } from '../contexts/userContext';
 	import SponsorAndMedpar from '../components/home/sponsor-and-medpar.svelte';
 
@@ -51,7 +50,6 @@
 		-o-user-select: none;
 	}
 	.page {
-		margin-top: 60px;
 		overflow: hidden;
 	}
 	* {

@@ -54,7 +54,7 @@
 		margin-left: 78px;
 	}
 	.footer-top-right > h1 {
-		font-family: Raleway;
+		font-family: 'Raleway';
 		font-weight: 900;
 		font-size: 1.75rem;
 		line-height: 143%;

@@ -23,7 +23,7 @@
 	const toLink = (icon, content, to) => ({ icon, content, to });
 	let links = [
 		toLink('bx-user', 'Profile', '/profile'),
-		toLink('bx-calendar-event', 'Events', '/'),
+		toLink('bx-calendar-event', 'Events', '/event-calendar'),
 		toLink('bx-mail-send', 'Mails', '/'),
 		toLink('bx-chat', 'Messages', '/'),
 		toLink('bx-cog', 'Setting', '/')
@@ -88,7 +88,9 @@
 			{/if}
 		{/if}
 	</div>
-	<slot style={width > 1200 ? 'padding-left: 78px;' : ''} />
+	<div style={width > 1200 ? 'padding-left: 78px;margin-top: 60px;' : 'margin-top: 60px;'}>
+		<slot />
+	</div>
 	<Footer />
 </section>
 
