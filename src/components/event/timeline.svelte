@@ -1,3 +1,9 @@
+<script>
+	export let date;
+	export let title;
+	export let description;
+</script>
+
 <div class="timeline-component">
 	<div class="decoration">
 		<div class="circle" />
@@ -5,17 +11,11 @@
 	</div>
 	<div class="content">
 		<div class="date-and-title">
-			<div class="date">21 September 2021</div>
-			<div class="title">Pemilihan Calon Ketua Himpunan</div>
+			<div class="date">{date}</div>
+			<div class="title">{title}</div>
 		</div>
 		<p class="description">
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ut modi corporis dicta alias a
-			nobis? Ad perspiciatis saepe, dolores error vero a, eum sint numquam voluptates dicta beatae
-			non. Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ut modi corporis dicta
-			alias a nobis? Ad perspiciatis saepe, dolores error vero a, eum sint numquam voluptates dicta
-			beatae non. Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ut modi corporis
-			dicta alias a nobis? Ad perspiciatis saepe, dolores error vero a, eum sint numquam voluptates
-			dicta beatae non.
+			{description}
 		</p>
 	</div>
 </div>
@@ -40,6 +40,10 @@
 		height: 1rem;
 		border-radius: 24px;
 		background: #dab232;
+	}
+
+	.title {
+		color: #dab232;
 	}
 
 	.line {

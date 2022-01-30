@@ -2,6 +2,12 @@
 	<div class="image-wrapper">
 		<img src="/home/summit.png" alt="Summit" />
 	</div>
+	<div class="details">
+		Collegacy Summit
+		<div class="wrapper-button">
+			<a class="register" href="/dashboard/summit">Register Now</a>
+		</div>
+	</div>
 </div>
 
 <style>
@@ -11,6 +17,11 @@
 		height: 100%;
 		object-fit: cover;
 		position: absolute;
+	}
+
+	.image-wrapper {
+		padding-top: 100%;
+		position: relative;
 	}
 
 	.card {
@@ -24,5 +35,27 @@
 		border-radius: 16px;
 		position: relative;
 		z-index: 0;
+	}
+
+	.details {
+		font-weight: 700;
+		display: flex;
+		flex-direction: column;
+		padding: 24px;
+	}
+
+	.wrapper-button {
+		width: 100%;
+		display: flex;
+		justify-content: flex-end;
+	}
+	.register {
+		background: transparent;
+		border: 1px solid blue;
+		color: blue;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 0.8rem;
+		padding: 0.5rem;
 	}
 </style>

@@ -10,9 +10,8 @@
 		},
 		{
 			title: 'Summit',
-			desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make",
-			isComingSoon: true,
-			link: '/',
+			desc: `Collegacy The Summit is a business competition held for college students to introduce and sharpen entrepreneurship skills with the hope the participants can create their startup. The competition will run as a combination of the hackathon and business competition. So, the participant can create an innovative startup within the Minimum Viable Product (MVP). This year's theme is "Shape The Future World through Innovation-Driven Entrepreneurship in The Society 5.0”.`,
+			link: '/event/summit',
 			img: '/home/summit.png'
 		}
 	];

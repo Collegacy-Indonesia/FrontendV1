@@ -24,9 +24,7 @@
 	};
 </script>
 
-<div class="container">
-	<form on:submit|preventDefault={onSubmit}>
-		<Field {fields} />
-		<button class="btn btn-secondary btn-lg btn-block" type="submit">Submit</button>
-	</form>
-</div>
+<form on:submit|preventDefault={onSubmit}>
+	<Field {fields} />
+	<button class="btn btn-secondary btn-lg btn-block" type="submit">Submit</button>
+</form>

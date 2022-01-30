@@ -1,10 +1,13 @@
+<script>
+	export let question;
+	export let answer;
+</script>
+
 <div class="accordion">
 	<details>
-		<summary> Hello world</summary>
+		<summary>{question}</summary>
 		<p>
-			Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea ad dignissimos obcaecati atque
-			assumenda corporis dolore, vero fugiat, numquam beatae est labore molestiae architecto earum
-			reprehenderit tenetur alias, doloribus sit?
+			{answer}
 		</p>
 	</details>
 </div>
