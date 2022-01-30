@@ -12,7 +12,6 @@ class ApiService {
 
 	async reqToken(email: string, password: string) {
 		if (this.hasToken()) {
-			alert('You are already login');
 			return;
 		}
 		try {
@@ -41,12 +40,11 @@ class ApiService {
 	}
 
 	async getData(fromRefreshToken = false) {
-		if (!this.hasToken()) {
-			alert('Please login first');
-			return;
+		const token = this.getToken();
+		if (!token) {
+			throw 'user has no token';
 		}
 
-		const token = localStorage.getItem('token');
 		try {
 			const res = await axios({
 				method: 'GET',
@@ -64,20 +62,24 @@ class ApiService {
 			console.log(err);
 
 			if (fromRefreshToken) {
-				return undefined;
+				throw 'your token is invalid';
 			} else {
-				await this.refreshToken();
-				return this.getData(true);
+        try {
+          await this.refreshToken();
+          return this.getData(true);
+        } catch (err) {
+          throw err;
+        }
 			}
 		}
 	}
 
-	async getUserProfile(afterRefreshToken = false) {
-		if (!this.hasToken()) {
-			return undefined;
+	async postData(payload, fromRefreshToken: boolean = false) {
+		const token = this.getToken();
+		if (!token) {
+			throw 'user has no token';
 		}
 
-		const token = localStorage.getItem('token');
 		try {
 			const res = await axios({
 				method: 'POST',
@@ -87,20 +89,95 @@ class ApiService {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`
 				},
-				responseType: 'json',
-				data: {
-					token
-				}
+				data: payload,
+				responseType: 'json'
 			});
 			console.log(res);
 			return res.data;
 		} catch (err) {
 			console.log(err);
-			if (afterRefreshToken) {
-				return undefined;
+
+			if (fromRefreshToken) {
+        throw 'your token is invalid';
 			} else {
-				await this.refreshToken();
-				return this.getUserProfile(true);
+        try {
+          await this.refreshToken();
+          return this.postData(payload, true);
+        } catch (err) {
+          throw err;
+        }
+			}
+		}
+	}
+
+	async putData(id, payload, fromRefreshToken: boolean = false) {
+		const token = this.getToken();
+		if (!token) {
+			throw 'user has no token';
+		}
+
+		try {
+			const res = await axios({
+				method: 'PUT',
+				url: this.API_URL + this.path + '/' + id,
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				},
+				responseType: 'json',
+				data: payload
+			});
+			console.log(res);
+			return res.data;
+		} catch (err) {
+			console.log(err);
+
+			if (fromRefreshToken) {
+				// return undefined;
+        throw 'your token is invalid';
+			} else {
+        try {
+          await this.refreshToken();
+          return this.putData(id, payload, true);
+        } catch (err) {
+          throw err;
+        }
+			}
+		}
+	}
+
+	async deleteData(id, fromRefreshToken: boolean = false) {
+		const token = this.getToken();
+		if (!token) {
+			throw 'user has no token';
+		}
+
+		try {
+			const res = await axios({
+				method: 'DELETE',
+				url: this.API_URL + this.path + '/' + id,
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				},
+				responseType: 'json'
+			});
+			console.log(res);
+			return res.data;
+		} catch (err) {
+			console.log(err);
+
+			if (fromRefreshToken) {
+				throw 'your token is invalid';
+			} else {
+        try {
+          await this.refreshToken();
+          return this.deleteData(id, true);
+        } catch (err) {
+          throw err;
+        }
 			}
 		}
 	}
@@ -133,7 +210,9 @@ class ApiService {
 		localStorage.removeItem('refresh_token');
 		window.location.href = '/';
 	}
-
+	getToken() {
+		return localStorage.getItem('token');
+	}
 	hasToken() {
 		return !!localStorage.getItem('token');
 	}
