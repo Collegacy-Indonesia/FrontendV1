@@ -23,10 +23,11 @@
 	const toLink = (icon, content, to) => ({ icon, content, to });
 	let links = [
 		toLink('bx-user', 'Profile', '/profile'),
-		toLink('bx-calendar-event', 'Events', '/event-calendar'),
-		toLink('bx-mail-send', 'Mails', '/'),
-		toLink('bx-chat', 'Messages', '/'),
-		toLink('bx-cog', 'Setting', '/')
+		toLink('bx-grid-alt', 'Dashboard', '/tasks'),
+		toLink('bx-calendar-event', 'Calendar', '/event-calendar')
+		// toLink('bx-mail-send', 'Mails', '/'),
+		// toLink('bx-chat', 'Messages', '/'),
+		// toLink('bx-cog', 'Setting', '/admin')
 	];
 	$: sidebarClass = open ? 'sidebar open' : 'sidebar';
 	$: btnClass = open ? 'bx bx-menu-alt-right' : 'bx bx-menu';
@@ -48,14 +49,14 @@
 		<i class={btnClass} id="btn" on:click={() => (open = !open)} />
 	</div>
 	<ul class={`nav-list ${width > 1200 || open ? '' : 'd-none'}`}>
-		<li>
+		<!-- <li>
 			<i class="bx bx-search" />
 			<input type="text" placeholder="Search..." />
 			<span class="tooltip">Search</span>
-		</li>
+		</li> -->
 		<li>
 			<a href="/">
-				<i class="bx bx-grid-alt" />
+				<i class="bx bx-home" />
 				<span class="links_name">Home</span>
 			</a>
 			<span class="tooltip">Home</span>
