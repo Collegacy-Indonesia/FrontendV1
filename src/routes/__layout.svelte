@@ -22,8 +22,8 @@
 	let btnClass = 'bx bx-menu-alt-right';
 	const toLink = (icon, content, to) => ({ icon, content, to });
 	let links = [
-		toLink('bx-user', 'Profile', '/profile'),
-		toLink('bx-grid-alt', 'Dashboard', '/dashboard'),
+		// toLink('bx-user', 'Profile', '/profile'),
+		// toLink('bx-grid-alt', 'Dashboard', '/dashboard'),
 		toLink('bx-calendar-event', 'Calendar', '/event-calendar')
 		// toLink('bx-mail-send', 'Mails', '/'),
 		// toLink('bx-chat', 'Messages', '/'),
