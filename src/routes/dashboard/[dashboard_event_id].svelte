@@ -1,4 +1,6 @@
 <script>
+	import ApiService from '../../utils/api';
+
 	import { radio, radioItems, text, textArea } from '../../components/admin/form_dto';
 	import Form from '../../components/shared/form-generator.svelte';
 </script>
@@ -15,8 +17,14 @@
 	</p>
 	<p>To register, fill the form below:</p>
 	<Form
-		submitFunction={(values) => {
-			console.log(values);
+		submitFunction={async (values) => {
+			const apiSrv = new ApiService('/summit-registrants');
+			try {
+				delete values.touched;
+				await apiSrv.postData(values);
+			} catch (err) {
+				alert(err.toString());
+			}
 		}}
 		fields={[
 			text('text', {

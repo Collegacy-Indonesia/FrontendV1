@@ -29,6 +29,9 @@
 		// toLink('bx-chat', 'Messages', '/'),
 		// toLink('bx-cog', 'Setting', '/admin')
 	];
+
+	let restrictedLinks = [toLink('bx-grid-alt', 'Dashboard', '/dashboard')];
+
 	$: sidebarClass = open ? 'sidebar open' : 'sidebar';
 	$: btnClass = open ? 'bx bx-menu-alt-right' : 'bx bx-menu';
 	$: pageDisplayName = parsePathToDisplay(url.pathname);
@@ -70,6 +73,17 @@
 				<span class="tooltip">{link.content}</span>
 			</li>
 		{/each}
+		{#if !($userContext === undefined || $userContext === null)}
+			{#each restrictedLinks as link}
+				<li>
+					<a href={link.to}>
+						<i class={`bx ${link.icon}`} />
+						<span class="links_name">{link.content}</span>
+					</a>
+					<span class="tooltip">{link.content}</span>
+				</li>
+			{/each}
+		{/if}
 	</ul>
 </div>
 <section class="home-section">
@@ -77,7 +91,7 @@
 		{#if width > 1200}
 			<span>{pageDisplayName}</span>
 			{#if $userContext === undefined || $userContext === null}
-				<a href="login">
+				<a href="/login">
 					<i class="bx bxs-log-in" />
 					<span class="links_name">Login</span>
 				</a>

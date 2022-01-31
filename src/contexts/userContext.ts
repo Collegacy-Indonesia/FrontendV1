@@ -17,28 +17,28 @@ const register = async (email: string, password: string) => {
 
 const getListUsers = async (email: string) => {
 	const apiSrv = new ApiService('/users');
-  try {
-    const dataUsers = await apiSrv.getData();
-    const user = dataUsers.find((datum) => datum.email === email);
-    userContext.set(user);
-    console.log(user);
-    userContext.subscribe((value) => console.log(value));
-  } catch (e) {
-    alert(e)
-  }
+	try {
+		const dataUsers = await apiSrv.getData();
+		const user = dataUsers.find((datum) => datum.email === email);
+		userContext.set(user);
+		console.log(user);
+		userContext.subscribe((value) => console.log(value));
+	} catch (e) {
+		alert(e);
+	}
 };
 
 const getUserProfile = async () => {
 	const apiSrv = new ApiService('/auth/profile');
 	const token = apiSrv.getToken();
-  try {
-    const userProfile = await apiSrv.postData({ token });
-    userContext.set(userProfile);
-    console.log(userProfile);
-    userContext.subscribe((value) => console.log(value));
-  } catch (e) {
-    alert(e)
-  }
+	try {
+		const userProfile = await apiSrv.postData({ token });
+		userContext.set(userProfile);
+		console.log(userProfile);
+		userContext.subscribe((value) => console.log(value));
+	} catch (e) {
+		alert(e);
+	}
 };
 
 const logout = () => {

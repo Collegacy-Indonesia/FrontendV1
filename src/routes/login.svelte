@@ -1,16 +1,15 @@
 <script>
-	import { login } from "../contexts/userContext";
-	
+	import { login } from '../contexts/userContext';
+
 	let email = '';
 	let password = '';
 
 	const handleSubmit = async () => {
 		if (await login(email, password)) {
-			console.log("redirecting");
+			console.log('redirecting');
 			window.location.href = '/';
 		}
-	}
-
+	};
 </script>
 
 <svelte:head>
@@ -84,5 +83,7 @@
 		font-size: 1.125em;
 		padding: 0.625em;
 		margin: 1.25em 0em;
+		text-align: center;
+		text-transform: capitalize;
 	}
 </style>
