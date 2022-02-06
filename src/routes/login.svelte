@@ -3,12 +3,16 @@
 
 	let email = '';
 	let password = '';
+	let loading = false;
 
 	const handleSubmit = async () => {
+		loading = true;
 		if (await login(email, password)) {
 			console.log('redirecting');
+			loading = false;
 			window.location.href = '/';
 		}
+		loading = false;
 	};
 </script>
 
@@ -21,7 +25,7 @@
 		<input placeholder="Your Email Address" type="text" bind:value={email} />
 		<input placeholder="Your Password" type="password" bind:value={password} />
 		<input id="terms" type="checkbox" />
-		<button type="submit">login</button>
+		<button type="submit">{loading ? 'Loading...' : 'Login'}</button>
 		<span>Don't have an account? <a href="/register">Register</a></span>
 	</form>
 </div>

@@ -9,10 +9,10 @@ const login = async (email: string, password: string) => {
 	return await apiSrv.reqToken(email, password);
 };
 
-const register = async (email: string, password: string) => {
+const register = async (email: string, password: string, full_name: string) => {
 	const errMsg = 'Your email has been used. Please login';
 	const apiSrv = new ApiService('/auth/register', errMsg);
-	return await apiSrv.reqToken(email, password);
+	return await apiSrv.reqToken(email, password, full_name, true);
 };
 
 const getListUsers = async (email: string) => {
@@ -34,10 +34,9 @@ const getUserProfile = async () => {
 	try {
 		const userProfile = await apiSrv.postData({ token });
 		userContext.set(userProfile);
-		console.log(userProfile);
 		userContext.subscribe((value) => console.log(value));
 	} catch (e) {
-		alert(e);
+		console.log(e);
 	}
 };
 

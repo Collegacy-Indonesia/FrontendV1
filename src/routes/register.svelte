@@ -3,12 +3,17 @@
 
 	let email = '';
 	let password = '';
+	let full_name = '';
+	let loading = false;
 
 	const handleSubmit = async () => {
-		if (await register(email, password)) {
+		loading = true;
+		if (await register(email, password, full_name)) {
 			console.log('redirecting');
-			window.location.href = '/';
+			loading = false;
+			window.location.href = '/profile';
 		}
+		loading = false;
 	};
 </script>
 
@@ -19,9 +24,10 @@
 	<form on:submit|preventDefault={handleSubmit} class="form-box">
 		<div class="header-text">Register</div>
 		<input placeholder="Your Email Address" type="text" bind:value={email} />
+		<input placeholder="Your Full Name" type="text" bind:value={full_name} />
 		<input placeholder="Your Password" type="password" bind:value={password} />
 		<input id="terms" type="checkbox" />
-		<button type="submit">register</button>
+		<button type="submit">{loading ? 'Loading...' : 'Register'}</button>
 		<span>Already have an account? <a href="/login">Login</a></span>
 	</form>
 </div>

@@ -2,17 +2,18 @@
 	let editing = false;
 
 	let profileData = {
-		fullName: 'Malik Akbar Hashemi Rafsanjani',
-		email: 'edu.malikakbar2357@gmail.com',
-		profilePicture: 'https://picsum.photos/200',
-		institute: 'Institut Teknologi Bandung',
-		phoneNumber: '081234567890',
-		idLine: 'crossinglife'
+		fullName: '',
+		email: '',
+		profilePicture: '',
+		institute: '',
+		phoneNumber: '',
+		idLine: '',
+		instagram: '',
+		jurusan: ''
 	};
 
 	const handleClick = () => {
 		if (editing) {
-			//TODO: connect to the backend
 			console.log('SUBMITTING');
 			console.log(profileData);
 		}
@@ -69,11 +70,31 @@
 			/>
 		</div>
 		<div class="profile-input-field">
+			<label for="jurusan">Major (Jurusan)</label>
+			<input
+				type="text"
+				name="jurusan"
+				bind:value={profileData.jurusan}
+				disabled={!editing}
+				class={'profile-input' + (editing ? '' : '-disabled')}
+			/>
+		</div>
+		<div class="profile-input-field">
 			<label for="phone_number">Phone Number</label>
 			<input
 				type="text"
 				name="phone_number"
 				bind:value={profileData.phoneNumber}
+				disabled={!editing}
+				class={'profile-input' + (editing ? '' : '-disabled')}
+			/>
+		</div>
+		<div class="profile-input-field">
+			<label for="instagram">Instagram account</label>
+			<input
+				type="text"
+				name="instagram"
+				bind:value={profileData.instagram}
 				disabled={!editing}
 				class={'profile-input' + (editing ? '' : '-disabled')}
 			/>
@@ -129,14 +150,14 @@
 		white-space: nowrap;
 		text-overflow: ellipsis;
 	}
-  .profile-input-disabled {
-    background: none;
-    border: none;
-  }
-  .profile-input {
-    padding: 5px 10px;
-    border-radius: 10px;
-  }
+	.profile-input-disabled {
+		background: none;
+		border: none;
+	}
+	.profile-input {
+		padding: 5px 10px;
+		border-radius: 10px;
+	}
 
 	.btn-edit {
 		background: #000000;
@@ -145,19 +166,19 @@
 		width: 90px;
 		height: 35px;
 	}
-  .profile-bottom-section input {
-    width: 100%;
-  }
+	.profile-bottom-section input {
+		width: 100%;
+	}
 	@media screen and (min-width: 768px) {
 		.profile-picture-container {
 			width: 200px;
 			height: 200px;
 		}
 	}
-  @media screen and (min-width: 1200px) {
+	@media screen and (min-width: 1200px) {
 		.btn-edit {
 			width: 172px;
 			height: 43.3px;
 		}
-  }
+	}
 </style>

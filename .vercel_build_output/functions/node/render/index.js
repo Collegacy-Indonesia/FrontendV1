@@ -5430,13 +5430,16 @@ var init_install_fetch = __esm({
   }
 });
 
-// .svelte-kit/output/server/chunks/index-b569d20f.js
+// .svelte-kit/output/server/chunks/index-b8062a89.js
 function noop2() {
 }
 function assign(tar, src) {
   for (const k in src)
     tar[k] = src[k];
   return tar;
+}
+function is_promise(value) {
+  return value && typeof value === "object" && typeof value.then === "function";
 }
 function run(fn) {
   return fn();
@@ -5592,8 +5595,8 @@ function add_attribute(name, value, boolean) {
   return ` ${name}${value === true ? "" : `=${typeof value === "string" ? JSON.stringify(escape(value)) : `"${value}"`}`}`;
 }
 var identity, current_component, globals, boolean_attributes, invalid_attribute_name_character, escaped, missing_component, on_destroy;
-var init_index_b569d20f = __esm({
-  ".svelte-kit/output/server/chunks/index-b569d20f.js"() {
+var init_index_b8062a89 = __esm({
+  ".svelte-kit/output/server/chunks/index-b8062a89.js"() {
     identity = (x2) => x2;
     Promise.resolve();
     globals = typeof window !== "undefined" ? window : typeof globalThis !== "undefined" ? globalThis : global;
@@ -8276,19 +8279,19 @@ var require_axios = __commonJS({
       };
       return instance;
     }
-    var axios2 = createInstance(defaults);
-    axios2.Axios = Axios;
-    axios2.Cancel = require_Cancel();
-    axios2.CancelToken = require_CancelToken();
-    axios2.isCancel = require_isCancel();
-    axios2.VERSION = require_data().version;
-    axios2.all = function all(promises) {
+    var axios3 = createInstance(defaults);
+    axios3.Axios = Axios;
+    axios3.Cancel = require_Cancel();
+    axios3.CancelToken = require_CancelToken();
+    axios3.isCancel = require_isCancel();
+    axios3.VERSION = require_data().version;
+    axios3.all = function all(promises) {
       return Promise.all(promises);
     };
-    axios2.spread = require_spread();
-    axios2.isAxiosError = require_isAxiosError();
-    module2.exports = axios2;
-    module2.exports.default = axios2;
+    axios3.spread = require_spread();
+    axios3.isAxiosError = require_isAxiosError();
+    module2.exports = axios3;
+    module2.exports.default = axios3;
   }
 });
 
@@ -8299,12 +8302,7 @@ var require_axios2 = __commonJS({
   }
 });
 
-// .svelte-kit/output/server/entries/pages/__layout.svelte.js
-var layout_svelte_exports = {};
-__export(layout_svelte_exports, {
-  default: () => _layout,
-  load: () => load
-});
+// .svelte-kit/output/server/chunks/userContext-841eb0de.js
 function writable2(value, start = noop2) {
   let stop;
   const subscribers = new Set();
@@ -8346,16 +8344,242 @@ function writable2(value, start = noop2) {
   }
   return { set, update, subscribe: subscribe2 };
 }
+var import_axios, subscriber_queue2, ApiService, userContext, getUserProfile;
+var init_userContext_841eb0de = __esm({
+  ".svelte-kit/output/server/chunks/userContext-841eb0de.js"() {
+    init_index_b8062a89();
+    import_axios = __toModule(require_axios2());
+    subscriber_queue2 = [];
+    ApiService = class {
+      constructor(path = "", errMsg = "") {
+        this.API_URL = "https://infinite-reef-54814.herokuapp.com";
+        this.path = path;
+        this.errMsg = errMsg;
+      }
+      async reqToken(email, password) {
+        if (this.hasToken()) {
+          return;
+        }
+        try {
+          const { data } = await (0, import_axios.default)({
+            method: "POST",
+            url: this.API_URL + this.path,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json"
+            },
+            responseType: "json",
+            data: {
+              email,
+              password
+            }
+          });
+          console.log(data);
+          this.setLocalStorage(data.token, data.refresh_token);
+          this.displayToken();
+          return true;
+        } catch (err) {
+          alert(this.errMsg);
+          return false;
+        }
+      }
+      async getData(fromRefreshToken = false) {
+        const token = this.getToken();
+        if (!token) {
+          throw "user has no token";
+        }
+        try {
+          const res = await (0, import_axios.default)({
+            method: "GET",
+            url: this.API_URL + this.path,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            responseType: "json"
+          });
+          return res.data;
+        } catch (err) {
+          if (fromRefreshToken) {
+            throw err;
+          } else {
+            try {
+              await this.refreshToken();
+              return this.getData(true);
+            } catch (err2) {
+              throw err2;
+            }
+          }
+        }
+      }
+      async postData(payload, fromRefreshToken = false) {
+        const token = this.getToken();
+        if (!token) {
+          throw "user has no token";
+        }
+        try {
+          const res = await (0, import_axios.default)({
+            method: "POST",
+            url: this.API_URL + this.path,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            data: payload,
+            responseType: "json"
+          });
+          return res.data;
+        } catch (err) {
+          if (fromRefreshToken) {
+            throw err.toString();
+          } else {
+            try {
+              await this.refreshToken();
+              return this.postData(payload, true);
+            } catch (err2) {
+              throw err2;
+            }
+          }
+        }
+      }
+      async putData(id, payload, fromRefreshToken = false) {
+        const token = this.getToken();
+        if (!token) {
+          throw "user has no token";
+        }
+        try {
+          const res = await (0, import_axios.default)({
+            method: "PUT",
+            url: this.API_URL + this.path + "/" + id,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            responseType: "json",
+            data: payload
+          });
+          console.log(res);
+          return res.data;
+        } catch (err) {
+          console.log(err);
+          if (fromRefreshToken) {
+            throw "your token is invalid";
+          } else {
+            try {
+              await this.refreshToken();
+              return this.putData(id, payload, true);
+            } catch (err2) {
+              throw err2;
+            }
+          }
+        }
+      }
+      async deleteData(id, fromRefreshToken = false) {
+        const token = this.getToken();
+        if (!token) {
+          throw "user has no token";
+        }
+        try {
+          const res = await (0, import_axios.default)({
+            method: "DELETE",
+            url: this.API_URL + this.path + "/" + id,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            responseType: "json"
+          });
+          console.log(res);
+          return res.data;
+        } catch (err) {
+          console.log(err);
+          if (fromRefreshToken) {
+            throw "your token is invalid";
+          } else {
+            try {
+              await this.refreshToken();
+              return this.deleteData(id, true);
+            } catch (err2) {
+              throw err2;
+            }
+          }
+        }
+      }
+      async refreshToken() {
+        try {
+          const { data } = await (0, import_axios.default)({
+            method: "POST",
+            url: this.API_URL + "/auth/refresh-token",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json"
+            },
+            responseType: "json",
+            data: {
+              refresh_token: localStorage.getItem("refresh_token")
+            }
+          });
+          this.setLocalStorage(data.token, data.refresh_token);
+          this.displayToken();
+        } catch (err) {
+          throw err;
+        }
+      }
+      logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("refresh_token");
+        window.location.href = "/";
+      }
+      getToken() {
+        return localStorage.getItem("token");
+      }
+      hasToken() {
+        return !!localStorage.getItem("token");
+      }
+      setLocalStorage(token, refresh_token) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("refresh_token", refresh_token);
+      }
+      displayToken() {
+        console.log("FROM LOCAL STORAGE");
+        console.log(localStorage.getItem("token"));
+        console.log(localStorage.getItem("refresh_token"));
+      }
+    };
+    userContext = writable2(null);
+    getUserProfile = async () => {
+      const apiSrv = new ApiService("/auth/profile");
+      const token = apiSrv.getToken();
+      try {
+        const userProfile = await apiSrv.postData({ token });
+        userContext.set(userProfile);
+        userContext.subscribe((value) => console.log(value));
+      } catch (e2) {
+        console.log(e2);
+      }
+    };
+  }
+});
+
+// .svelte-kit/output/server/entries/pages/__layout.svelte.js
+var layout_svelte_exports = {};
+__export(layout_svelte_exports, {
+  default: () => _layout,
+  load: () => load
+});
 async function load({ url }) {
   return { props: { url } };
 }
-var import_axios, subscriber_queue2, userContext, css$1, logoCollegacy, instagramIcon, linkedinIcon, mailIcon, Footer, css2, _layout;
+var import_axios2, css$1, logoCollegacy, instagramIcon, linkedinIcon, mailIcon, Footer, css2, _layout;
 var init_layout_svelte = __esm({
   ".svelte-kit/output/server/entries/pages/__layout.svelte.js"() {
-    init_index_b569d20f();
-    import_axios = __toModule(require_axios2());
-    subscriber_queue2 = [];
-    userContext = writable2(null);
+    init_index_b8062a89();
+    init_userContext_841eb0de();
+    import_axios2 = __toModule(require_axios2());
     css$1 = {
       code: ".footer-container.svelte-1izizyh.svelte-1izizyh{background:#11101d}.container-large.svelte-1izizyh.svelte-1izizyh{margin-left:78px}.footer-top-right.svelte-1izizyh>h1.svelte-1izizyh{font-family:'Raleway';font-weight:900;font-size:1.75rem;line-height:143%;color:#fff}.footer-socmed.svelte-1izizyh>.svelte-1izizyh{margin:0 22px;width:45px;transition:all 0.3s ease-in-out}.footer-socmed.svelte-1izizyh>.svelte-1izizyh:hover{transform:scale(1.1);cursor:pointer}.footer-bottom.svelte-1izizyh>h1.svelte-1izizyh{font-weight:bold;font-size:1.75rem;line-height:118%;color:#f7f5e9}",
       map: null
@@ -8398,8 +8622,8 @@ var init_layout_svelte = __esm({
     };
     _layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       let sidebarClass;
-      let $$unsubscribe_userContext;
-      $$unsubscribe_userContext = subscribe(userContext, (value) => value);
+      let $userContext, $$unsubscribe_userContext;
+      $$unsubscribe_userContext = subscribe(userContext, (value) => $userContext = value);
       let { url } = $$props;
       const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
       const parsePathToDisplay = (path) => path === "/" ? "Home" : capitalizeFirstLetter(path.slice(1, path.length)).split("/")[0];
@@ -8408,6 +8632,7 @@ var init_layout_svelte = __esm({
       let links = [
         toLink("bx-calendar-event", "Calendar", "/event-calendar")
       ];
+      let restrictedLinks = [toLink("bx-grid-alt", "Dashboard", "/dashboard")];
       if ($$props.url === void 0 && $$bindings.url && url !== void 0)
         $$bindings.url(url);
       $$result.css.add(css2);
@@ -8427,7 +8652,11 @@ var init_layout_svelte = __esm({
 		${each(links, (link) => `<li class="${"svelte-1blh9aa"}"><a${add_attribute("href", link.to, 0)} class="${"svelte-1blh9aa"}"><i class="${escape(null_to_empty(`bx ${link.icon}`)) + " svelte-1blh9aa"}"></i>
 					<span class="${"links_name svelte-1blh9aa"}">${escape(link.content)}</span></a>
 				<span class="${"tooltip svelte-1blh9aa"}">${escape(link.content)}</span>
-			</li>`)}</ul></div>
+			</li>`)}
+		${!($userContext === void 0 || $userContext === null) ? `${each(restrictedLinks, (link) => `<li class="${"svelte-1blh9aa"}"><a${add_attribute("href", link.to, 0)} class="${"svelte-1blh9aa"}"><i class="${escape(null_to_empty(`bx ${link.icon}`)) + " svelte-1blh9aa"}"></i>
+						<span class="${"links_name svelte-1blh9aa"}">${escape(link.content)}</span></a>
+					<span class="${"tooltip svelte-1blh9aa"}">${escape(link.content)}</span>
+				</li>`)}` : ``}</ul></div>
 <section class="${"home-section svelte-1blh9aa"}"><div class="${"navbar svelte-1blh9aa"}"${add_attribute("style", "width:calc(100% - 77px);", 0)}>${``}</div>
 	<div${add_attribute("style", "margin-top: 60px;", 0)} class="${"svelte-1blh9aa"}">${slots.default ? slots.default({}) : ``}</div>
 	${validate_component(Footer, "Footer").$$render($$result, {}, {}, {})}
@@ -8448,8 +8677,8 @@ var entry, js, css3;
 var init__ = __esm({
   ".svelte-kit/output/server/nodes/0.js"() {
     init_layout_svelte();
-    entry = "pages/__layout.svelte-5b66345b.js";
-    js = ["pages/__layout.svelte-5b66345b.js", "chunks/vendor-06509e96.js", "chunks/userContext-4c3336d7.js"];
+    entry = "pages/__layout.svelte-94a476aa.js";
+    js = ["pages/__layout.svelte-94a476aa.js", "chunks/vendor-23be5db7.js", "chunks/userContext-5265bf25.js"];
     css3 = ["assets/pages/__layout.svelte-9f3f450a.css", "assets/vendor-b3638832.css"];
   }
 });
@@ -8466,7 +8695,7 @@ function load2({ error: error2, status }) {
 var Error2;
 var init_error_svelte = __esm({
   ".svelte-kit/output/server/entries/pages/error.svelte.js"() {
-    init_index_b569d20f();
+    init_index_b8062a89();
     Error2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       let { status } = $$props;
       let { error: error2 } = $$props;
@@ -8498,8 +8727,8 @@ var entry2, js2, css4;
 var init__2 = __esm({
   ".svelte-kit/output/server/nodes/1.js"() {
     init_error_svelte();
-    entry2 = "error.svelte-bfcdc20f.js";
-    js2 = ["error.svelte-bfcdc20f.js", "chunks/vendor-06509e96.js"];
+    entry2 = "error.svelte-723818bc.js";
+    js2 = ["error.svelte-723818bc.js", "chunks/vendor-23be5db7.js"];
     css4 = ["assets/vendor-b3638832.css"];
   }
 });
@@ -8596,11 +8825,11 @@ function layout({
     return scaledImages;
   }
 }
-var import_axios2, css$7, logo, Intro, css$6, Our_value, css$5, Our_events, css$4, Instagram_post, css$3, Gallery$1, Img, dijkstra, css$2, Gallery, css$12, Sponsor_and_medpar, css5, Routes;
+var import_axios3, css$7, logo, Intro, css$6, Our_value, css$5, Our_events, css$4, Instagram_post, css$3, Gallery$1, Img, dijkstra, css$2, Gallery, css$12, Sponsor_and_medpar, css5, Routes;
 var init_index_svelte = __esm({
   ".svelte-kit/output/server/entries/pages/index.svelte.js"() {
-    init_index_b569d20f();
-    import_axios2 = __toModule(require_axios2());
+    init_index_b8062a89();
+    import_axios3 = __toModule(require_axios2());
     css$7 = {
       code: ".container-large.svelte-1lgtizp.svelte-1lgtizp{height:42.375rem;position:relative}.middle-circle.svelte-1lgtizp.svelte-1lgtizp{position:absolute;top:0;width:35.1875rem;height:35.1875rem}.top-right-circle.svelte-1lgtizp.svelte-1lgtizp{position:absolute;right:-10rem;top:-1.25rem;width:20.25rem;height:20.25rem}.left-part.svelte-1lgtizp.svelte-1lgtizp{width:40.625rem;margin-right:5.4375rem;padding-left:1.875rem}.intro-title.svelte-1lgtizp h1.svelte-1lgtizp{font-weight:bold;font-size:6rem;line-height:117%;text-transform:capitalize;color:#000000;text-shadow:0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25)}.intro-desc.svelte-1lgtizp.svelte-1lgtizp{margin:2.5rem 0}.intro-desc.svelte-1lgtizp h2.svelte-1lgtizp{font-weight:bold;font-size:1.8125rem;line-height:133.4%;color:#000000}.lifter.svelte-1lgtizp.svelte-1lgtizp{width:100%;height:6.25rem}.top-part.svelte-1lgtizp.svelte-1lgtizp{margin-top:2.5rem}.top-right-part.svelte-1lgtizp.svelte-1lgtizp{margin-left:2.8125rem}.top-right-part.svelte-1lgtizp h1.svelte-1lgtizp{font-size:7vw}.small-logo.svelte-1lgtizp.svelte-1lgtizp{width:22vw;height:23vw}.bottom-part.svelte-1lgtizp h2.svelte-1lgtizp{font-size:4vw;padding:0 0.9375rem}",
       map: null
@@ -8909,7 +9138,7 @@ ${columns ? `<div id="${"gallery"}"${add_attribute("style", galleryStyle, 0)} cl
       map: null
     };
     Sponsor_and_medpar = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-      import_axios2.default.get("https://picsum.photos/v2/list");
+      import_axios3.default.get("https://picsum.photos/v2/list");
       const images = [
         { src: "/home/sponsor-1.png", height: 200 },
         { src: "/home/sponsor-2.png", height: 50 }
@@ -8966,8 +9195,8 @@ var entry3, js3, css6;
 var init__3 = __esm({
   ".svelte-kit/output/server/nodes/2.js"() {
     init_index_svelte();
-    entry3 = "pages/index.svelte-ab1df746.js";
-    js3 = ["pages/index.svelte-ab1df746.js", "chunks/vendor-06509e96.js", "chunks/userContext-4c3336d7.js"];
+    entry3 = "pages/index.svelte-eb3721b8.js";
+    js3 = ["pages/index.svelte-eb3721b8.js", "chunks/vendor-23be5db7.js", "chunks/userContext-5265bf25.js"];
     css6 = ["assets/pages/index.svelte-61760827.css", "assets/vendor-b3638832.css"];
   }
 });
@@ -8980,7 +9209,7 @@ __export(event_calendar_svelte_exports, {
 var css7, Event_calendar;
 var init_event_calendar_svelte = __esm({
   ".svelte-kit/output/server/entries/pages/event-calendar.svelte.js"() {
-    init_index_b569d20f();
+    init_index_b8062a89();
     css7 = {
       code: ".container.svelte-1hreyyt{padding:1rem}",
       map: null
@@ -9005,8 +9234,8 @@ var entry4, js4, css8;
 var init__4 = __esm({
   ".svelte-kit/output/server/nodes/3.js"() {
     init_event_calendar_svelte();
-    entry4 = "pages/event-calendar.svelte-a4e2ee0a.js";
-    js4 = ["pages/event-calendar.svelte-a4e2ee0a.js", "chunks/preload-helper-ec9aa979.js", "chunks/vendor-06509e96.js"];
+    entry4 = "pages/event-calendar.svelte-6bf93492.js";
+    js4 = ["pages/event-calendar.svelte-6bf93492.js", "chunks/preload-helper-ec9aa979.js", "chunks/vendor-23be5db7.js"];
     css8 = ["assets/pages/event-calendar.svelte-9355c4de.css", "assets/vendor-b3638832.css"];
   }
 });
@@ -9016,20 +9245,56 @@ var index_svelte_exports2 = {};
 __export(index_svelte_exports2, {
   default: () => Dashboard
 });
-var css$13, Event_card, css9, Dashboard;
+var import_axios4, css$13, Event_card, css9, Dashboard;
 var init_index_svelte2 = __esm({
   ".svelte-kit/output/server/entries/pages/dashboard/index.svelte.js"() {
-    init_index_b569d20f();
+    init_index_b8062a89();
+    init_userContext_841eb0de();
+    import_axios4 = __toModule(require_axios2());
     css$13 = {
-      code: ".image-wrapper.svelte-zt88xv>img.svelte-zt88xv{top:0px;width:100%;height:100%;object-fit:cover;position:absolute}.image-wrapper.svelte-zt88xv.svelte-zt88xv{padding-top:100%;position:relative}.card.svelte-zt88xv.svelte-zt88xv{background-color:rgb(255, 255, 255);color:rgb(33, 43, 54);transition:box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;background-image:none;overflow:hidden;box-shadow:rgba(145, 158, 171, 0.24) 0px 0px 2px 0px,\n			rgba(145, 158, 171, 0.24) 0px 16px 32px -4px;border-radius:16px;position:relative;z-index:0}.details.svelte-zt88xv.svelte-zt88xv{font-weight:700;display:flex;flex-direction:column;padding:24px}.wrapper-button.svelte-zt88xv.svelte-zt88xv{width:100%;display:flex;justify-content:flex-end}.register.svelte-zt88xv.svelte-zt88xv{background:transparent;border:1px solid blue;color:blue;border-radius:5px;cursor:pointer;font-size:0.8rem;padding:0.5rem}",
+      code: ".image-wrapper.svelte-6qlupp>img.svelte-6qlupp{top:0px;width:100%;height:100%;object-fit:cover;position:absolute}.image-wrapper.svelte-6qlupp.svelte-6qlupp{padding-top:100%;position:relative}.card.svelte-6qlupp.svelte-6qlupp{background-color:rgb(255, 255, 255);color:rgb(33, 43, 54);transition:box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;background-image:none;overflow:hidden;box-shadow:rgba(145, 158, 171, 0.24) 0px 0px 2px 0px,\n			rgba(145, 158, 171, 0.24) 0px 16px 32px -4px;border-radius:16px;position:relative;z-index:0}.details.svelte-6qlupp.svelte-6qlupp{font-weight:700;display:flex;flex-direction:column;padding:24px}.wrapper-button.svelte-6qlupp.svelte-6qlupp{width:100%;display:flex;justify-content:flex-end}.register.svelte-6qlupp.svelte-6qlupp{background:transparent;border:1px solid blue;color:blue;border-radius:5px;cursor:pointer;font-size:0.8rem;padding:0.5rem}.registered.svelte-6qlupp.svelte-6qlupp{background:transparent;border:1px solid black;color:black;border-radius:5px;cursor:pointer;font-size:0.8rem;padding:0.5rem}",
       map: null
     };
     Event_card = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+      let $userContext, $$unsubscribe_userContext;
+      $$unsubscribe_userContext = subscribe(userContext, (value) => $userContext = value);
+      const checkIfRegistered = async () => {
+        const apiSrv = new ApiService(`/users/registered-summit/${$userContext.id}`);
+        var registered = false;
+        try {
+          registered = !await apiSrv.getData() ? false : true;
+        } catch (_) {
+          registered = false;
+        }
+        return registered;
+      };
       $$result.css.add(css$13);
-      return `<div class="${"card svelte-zt88xv"}"><div class="${"image-wrapper svelte-zt88xv"}"><img src="${"/home/summit.png"}" alt="${"Summit"}" class="${"svelte-zt88xv"}"></div>
-	<div class="${"details svelte-zt88xv"}">Collegacy Summit
-		<div class="${"wrapper-button svelte-zt88xv"}"><a class="${"register svelte-zt88xv"}" href="${"/dashboard/summit"}">Register Now</a></div></div>
-</div>`;
+      $$unsubscribe_userContext();
+      return `${function(__value) {
+        if (is_promise(__value)) {
+          __value.then(null, noop2);
+          return `
+	<div>Loading</div>
+`;
+        }
+        return function(_) {
+          return `
+	${function(__value2) {
+            if (is_promise(__value2)) {
+              __value2.then(null, noop2);
+              return ``;
+            }
+            return function(registered) {
+              return `
+		<div class="${"card svelte-6qlupp"}"><div class="${"image-wrapper svelte-6qlupp"}"><img src="${"/home/summit.png"}" alt="${"Summit"}" class="${"svelte-6qlupp"}"></div>
+			<div class="${"details svelte-6qlupp"}">Collegacy Summit
+				${registered ? `<div class="${"wrapper-button svelte-6qlupp"}"><button class="${"registered svelte-6qlupp"}" ${"disabled"}>Registered</button></div>` : `<div class="${"wrapper-button svelte-6qlupp"}"><a class="${"register svelte-6qlupp"}" href="${"/dashboard/summit"}">Register Now</a></div>`}</div></div>
+	`;
+            }(__value2);
+          }(checkIfRegistered())}
+`;
+        }();
+      }(getUserProfile())}`;
     });
     css9 = {
       code: ".container-grid.svelte-19uk3su{display:grid;grid-template-columns:auto auto auto auto auto;gap:1rem}h3.svelte-19uk3su{margin-bottom:3rem}.main-container.svelte-19uk3su{padding:3rem}",
@@ -9056,9 +9321,9 @@ var entry5, js5, css10;
 var init__5 = __esm({
   ".svelte-kit/output/server/nodes/4.js"() {
     init_index_svelte2();
-    entry5 = "pages/dashboard/index.svelte-284b5920.js";
-    js5 = ["pages/dashboard/index.svelte-284b5920.js", "chunks/vendor-06509e96.js"];
-    css10 = ["assets/pages/dashboard/index.svelte-04ae9abf.css", "assets/vendor-b3638832.css"];
+    entry5 = "pages/dashboard/index.svelte-6ab6073f.js";
+    js5 = ["pages/dashboard/index.svelte-6ab6073f.js", "chunks/vendor-23be5db7.js", "chunks/userContext-5265bf25.js"];
+    css10 = ["assets/pages/dashboard/index.svelte-da3eb408.css", "assets/vendor-b3638832.css"];
   }
 });
 
@@ -9113,7 +9378,7 @@ var init_form_dto_7efb270b = __esm({
   }
 });
 
-// .svelte-kit/output/server/chunks/form-generator-baa32a82.js
+// .svelte-kit/output/server/chunks/form-generator-de90c326.js
 function cubicInOut(t2) {
   return t2 < 0.5 ? 4 * t2 * t2 * t2 : 0.5 * Math.pow(2 * t2 - 2, 3) + 1;
 }
@@ -9354,7 +9619,7 @@ function createDialog(props) {
   });
   return dialog.promise;
 }
-function alert(props) {
+function alert2(props) {
   return createDialog(props);
 }
 function confirm(props) {
@@ -9418,9 +9683,9 @@ function create(props) {
   return toast;
 }
 var transitions, Tag, Input, Textarea, Select, css$72, AutoComplete, Radio, Checkbox, css$62, File2, Field, Icon, css$52, Dialog, Modal, ModalCard, css$42, allowedProps, Notice, css$32, Notification, Object_1, css$22, NotificationNotice, css$14, Snackbar, css11, Toast, Form_generator;
-var init_form_generator_baa32a82 = __esm({
-  ".svelte-kit/output/server/chunks/form-generator-baa32a82.js"() {
-    init_index_b569d20f();
+var init_form_generator_de90c326 = __esm({
+  ".svelte-kit/output/server/chunks/form-generator-de90c326.js"() {
+    init_index_b8062a89();
     transitions = /* @__PURE__ */ Object.freeze({
       __proto__: null,
       [Symbol.toStringTag]: "Module",
@@ -9776,7 +10041,7 @@ ${active ? `<div class="${"modal dialog " + escape(size) + " is-active svelte-1f
       <footer class="${"modal-card-foot svelte-1fsuju2"}">${showCancel ? `<button class="${"button svelte-1fsuju2"}"${add_attribute("this", cancelButton, 0)}>${escape(cancelText)}</button>` : ``}
         <button class="${"button " + escape(type) + " svelte-1fsuju2"}"${add_attribute("this", confirmButton, 0)}>${escape(confirmText)}</button></footer></div></div>` : ``}`;
     });
-    Dialog.alert = alert;
+    Dialog.alert = alert2;
     Dialog.confirm = confirm;
     Dialog.prompt = prompt;
     Modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -10075,18 +10340,29 @@ var dashboard_event_id_svelte_exports = {};
 __export(dashboard_event_id_svelte_exports, {
   default: () => U5Bdashboard_event_idu5D
 });
-var css12, U5Bdashboard_event_idu5D;
+function guard(name) {
+  return () => {
+    throw new Error(`Cannot call ${name}(...) on the server`);
+  };
+}
+var import_axios5, goto, css12, U5Bdashboard_event_idu5D;
 var init_dashboard_event_id_svelte = __esm({
   ".svelte-kit/output/server/entries/pages/dashboard/_dashboard_event_id_.svelte.js"() {
-    init_index_b569d20f();
+    init_index_b8062a89();
+    init_userContext_841eb0de();
     init_form_dto_7efb270b();
-    init_form_generator_baa32a82();
+    init_form_generator_de90c326();
+    import_axios5 = __toModule(require_axios2());
+    goto = guard("goto");
     css12 = {
       code: "h1.svelte-jh2c6{font-size:2rem}.main-container.svelte-jh2c6{padding:3rem;display:flex;flex-direction:column;gap:1rem}p.svelte-jh2c6{font-weight:700;text-align:justify}",
       map: null
     };
     U5Bdashboard_event_idu5D = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+      let $userContext, $$unsubscribe_userContext;
+      $$unsubscribe_userContext = subscribe(userContext, (value) => $userContext = value);
       $$result.css.add(css12);
+      $$unsubscribe_userContext();
       return `<div class="${"main-container svelte-jh2c6"}"><h1 style="${"text-align:center;padding:1rem;"}" class="${"svelte-jh2c6"}">Collegacy Summit</h1>
 	<p class="${"svelte-jh2c6"}">Collegacy The Summit is a business competition held for college students to introduce and
 		sharpen entrepreneurship skills with the hope the participants can create their startup. The
@@ -10097,8 +10373,15 @@ var init_dashboard_event_id_svelte = __esm({
 	</p>
 	<p class="${"svelte-jh2c6"}">To register, fill the form below:</p>
 	${validate_component(Form_generator, "Form").$$render($$result, {
-        submitFunction: (values) => {
-          console.log(values);
+        submitFunction: async (values) => {
+          const apiSrv = new ApiService("/summit-registrants");
+          try {
+            delete values.touched;
+            await apiSrv.postData(__spreadProps(__spreadValues({}, values), { user_id: $userContext.id }));
+            goto("/dashboard");
+          } catch (err) {
+            alert(err.toString());
+          }
         },
         fields: [
           text("text", {
@@ -10163,8 +10446,8 @@ var entry6, js6, css13;
 var init__6 = __esm({
   ".svelte-kit/output/server/nodes/5.js"() {
     init_dashboard_event_id_svelte();
-    entry6 = "pages/dashboard/_dashboard_event_id_.svelte-021ec2f4.js";
-    js6 = ["pages/dashboard/_dashboard_event_id_.svelte-021ec2f4.js", "chunks/vendor-06509e96.js", "chunks/form_dto-7efb270b.js", "chunks/form-generator-df49ea1a.js"];
+    entry6 = "pages/dashboard/_dashboard_event_id_.svelte-e5339fdf.js";
+    js6 = ["pages/dashboard/_dashboard_event_id_.svelte-e5339fdf.js", "chunks/vendor-23be5db7.js", "chunks/userContext-5265bf25.js", "chunks/form_dto-7efb270b.js", "chunks/singletons-12a22614.js", "chunks/form-generator-31d2896b.js"];
     css13 = ["assets/pages/dashboard/_dashboard_event_id_.svelte-f74bdcf7.css", "assets/vendor-b3638832.css", "assets/form-generator-945f5289.css"];
   }
 });
@@ -10174,13 +10457,13 @@ var register_svelte_exports = {};
 __export(register_svelte_exports, {
   default: () => Register
 });
-var import_axios3, css14, Register;
+var import_axios6, css14, Register;
 var init_register_svelte = __esm({
   ".svelte-kit/output/server/entries/pages/register.svelte.js"() {
-    init_index_b569d20f();
-    import_axios3 = __toModule(require_axios2());
+    init_index_b8062a89();
+    import_axios6 = __toModule(require_axios2());
     css14 = {
-      code: ".svelte-1i08f3y.svelte-1i08f3y{box-sizing:border-box;display:inline-block}a.svelte-1i08f3y.svelte-1i08f3y{color:rgb(77, 53, 212);text-decoration:none}.container.svelte-1i08f3y.svelte-1i08f3y{position:relative;z-index:3;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh}.form-box.svelte-1i08f3y.svelte-1i08f3y{color:white;display:flex;flex-direction:column;gap:0.5rem;background:#11101d;padding:40px;width:90%;max-width:600px}.form-box.svelte-1i08f3y .header-text.svelte-1i08f3y{font-size:32px;font-weight:600;padding-bottom:30px;text-align:center}.form-box.svelte-1i08f3y input.svelte-1i08f3y{background:#1d1b31;color:#fff;margin:10px 0px;border:none;padding:10px;border-radius:5px;width:100%;font-size:18px}.form-box.svelte-1i08f3y input[type='checkbox'].svelte-1i08f3y{display:none}.form-box.svelte-1i08f3y button.svelte-1i08f3y{background:#1d1b31;color:#fff;border:none;border-radius:5px;cursor:pointer;width:100%;font-size:18px;padding:10px;margin:20px 0px}",
+      code: ".svelte-1vl2s6s.svelte-1vl2s6s{box-sizing:border-box;display:inline-block}a.svelte-1vl2s6s.svelte-1vl2s6s{color:rgb(77, 53, 212);text-decoration:none}.container.svelte-1vl2s6s.svelte-1vl2s6s{position:relative;z-index:3;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh}.form-box.svelte-1vl2s6s.svelte-1vl2s6s{color:white;display:flex;flex-direction:column;gap:0.5rem;background:#11101d;padding:40px;width:90%;max-width:600px}.form-box.svelte-1vl2s6s .header-text.svelte-1vl2s6s{font-size:32px;font-weight:600;padding-bottom:30px;text-align:center}.form-box.svelte-1vl2s6s input.svelte-1vl2s6s{background:#1d1b31;color:#fff;margin:10px 0px;border:none;padding:10px;border-radius:5px;width:100%;font-size:18px}.form-box.svelte-1vl2s6s input[type='checkbox'].svelte-1vl2s6s{display:none}.form-box.svelte-1vl2s6s button.svelte-1vl2s6s{background:#1d1b31;color:#fff;border:none;border-radius:5px;cursor:pointer;width:100%;font-size:18px;padding:10px;margin:20px 0px;text-transform:capitalize;text-align:center}",
       map: null
     };
     Register = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -10188,12 +10471,12 @@ var init_register_svelte = __esm({
       let password = "";
       $$result.css.add(css14);
       return `${$$result.head += `${$$result.title = `<title>Login Page</title>`, ""}`, ""}
-<div class="${"container svelte-1i08f3y"}"><form class="${"form-box svelte-1i08f3y"}"><div class="${"header-text svelte-1i08f3y"}">Register</div>
-		<input placeholder="${"Your Email Address"}" type="${"text"}" class="${"svelte-1i08f3y"}"${add_attribute("value", email, 0)}>
-		<input placeholder="${"Your Password"}" type="${"password"}" class="${"svelte-1i08f3y"}"${add_attribute("value", password, 0)}>
-		<input id="${"terms"}" type="${"checkbox"}" class="${"svelte-1i08f3y"}">
-		<button type="${"submit"}" class="${"svelte-1i08f3y"}">register</button>
-		<span class="${"svelte-1i08f3y"}">Already have an account? <a href="${"/login"}" class="${"svelte-1i08f3y"}">Login</a></span></form>
+<div class="${"container svelte-1vl2s6s"}"><form class="${"form-box svelte-1vl2s6s"}"><div class="${"header-text svelte-1vl2s6s"}">Register</div>
+		<input placeholder="${"Your Email Address"}" type="${"text"}" class="${"svelte-1vl2s6s"}"${add_attribute("value", email, 0)}>
+		<input placeholder="${"Your Password"}" type="${"password"}" class="${"svelte-1vl2s6s"}"${add_attribute("value", password, 0)}>
+		<input id="${"terms"}" type="${"checkbox"}" class="${"svelte-1vl2s6s"}">
+		<button type="${"submit"}" class="${"svelte-1vl2s6s"}">register</button>
+		<span class="${"svelte-1vl2s6s"}">Already have an account? <a href="${"/login"}" class="${"svelte-1vl2s6s"}">Login</a></span></form>
 </div>`;
     });
   }
@@ -10211,9 +10494,9 @@ var entry7, js7, css15;
 var init__7 = __esm({
   ".svelte-kit/output/server/nodes/6.js"() {
     init_register_svelte();
-    entry7 = "pages/register.svelte-2705479b.js";
-    js7 = ["pages/register.svelte-2705479b.js", "chunks/vendor-06509e96.js", "chunks/userContext-4c3336d7.js"];
-    css15 = ["assets/pages/register.svelte-b60124c0.css", "assets/vendor-b3638832.css"];
+    entry7 = "pages/register.svelte-017f7446.js";
+    js7 = ["pages/register.svelte-017f7446.js", "chunks/vendor-23be5db7.js", "chunks/userContext-5265bf25.js"];
+    css15 = ["assets/pages/register.svelte-a37f4352.css", "assets/vendor-b3638832.css"];
   }
 });
 
@@ -10225,7 +10508,7 @@ __export(profile_svelte_exports, {
 var Profile;
 var init_profile_svelte = __esm({
   ".svelte-kit/output/server/entries/pages/profile.svelte.js"() {
-    init_index_b569d20f();
+    init_index_b8062a89();
     Profile = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       return `<div></div>`;
     });
@@ -10244,8 +10527,8 @@ var entry8, js8, css16;
 var init__8 = __esm({
   ".svelte-kit/output/server/nodes/7.js"() {
     init_profile_svelte();
-    entry8 = "pages/profile.svelte-4c282719.js";
-    js8 = ["pages/profile.svelte-4c282719.js", "chunks/vendor-06509e96.js"];
+    entry8 = "pages/profile.svelte-31df9edb.js";
+    js8 = ["pages/profile.svelte-31df9edb.js", "chunks/vendor-23be5db7.js"];
     css16 = ["assets/vendor-b3638832.css"];
   }
 });
@@ -10258,7 +10541,7 @@ __export(index_svelte_exports3, {
 var field, createCrud, Model, css17, Admin;
 var init_index_svelte3 = __esm({
   ".svelte-kit/output/server/entries/pages/admin/index.svelte.js"() {
-    init_index_b569d20f();
+    init_index_b8062a89();
     init_form_dto_7efb270b();
     field = (name, type) => ({ name, type });
     createCrud = (fields) => {
@@ -10326,8 +10609,8 @@ var entry9, js9, css18;
 var init__9 = __esm({
   ".svelte-kit/output/server/nodes/8.js"() {
     init_index_svelte3();
-    entry9 = "pages/admin/index.svelte-fd7a8a21.js";
-    js9 = ["pages/admin/index.svelte-fd7a8a21.js", "chunks/vendor-06509e96.js", "chunks/form_dto-7efb270b.js"];
+    entry9 = "pages/admin/index.svelte-92489254.js";
+    js9 = ["pages/admin/index.svelte-92489254.js", "chunks/vendor-23be5db7.js", "chunks/form_dto-7efb270b.js"];
     css18 = ["assets/pages/admin/index.svelte-704ea046.css", "assets/vendor-b3638832.css"];
   }
 });
@@ -10340,9 +10623,9 @@ __export(admin_component_svelte_exports, {
 var css19, U5Badmin_componentu5D;
 var init_admin_component_svelte = __esm({
   ".svelte-kit/output/server/entries/pages/admin/_admin_component_.svelte.js"() {
-    init_index_b569d20f();
+    init_index_b8062a89();
     init_form_dto_7efb270b();
-    init_form_generator_baa32a82();
+    init_form_generator_de90c326();
     css19 = {
       code: ".container.svelte-26kzbl{padding:1rem}.header.svelte-26kzbl{display:flex;justify-content:space-between;align-items:center}select.svelte-26kzbl{cursor:pointer;background:white;padding:0.5rem;border-radius:15px}",
       map: null
@@ -10391,8 +10674,8 @@ var entry10, js10, css20;
 var init__10 = __esm({
   ".svelte-kit/output/server/nodes/9.js"() {
     init_admin_component_svelte();
-    entry10 = "pages/admin/_admin_component_.svelte-dc0994e2.js";
-    js10 = ["pages/admin/_admin_component_.svelte-dc0994e2.js", "chunks/vendor-06509e96.js", "chunks/form_dto-7efb270b.js", "chunks/form-generator-df49ea1a.js"];
+    entry10 = "pages/admin/_admin_component_.svelte-baa010c9.js";
+    js10 = ["pages/admin/_admin_component_.svelte-baa010c9.js", "chunks/vendor-23be5db7.js", "chunks/form_dto-7efb270b.js", "chunks/form-generator-31d2896b.js"];
     css20 = ["assets/pages/admin/_admin_component_.svelte-5bef36de.css", "assets/vendor-b3638832.css", "assets/form-generator-945f5289.css"];
   }
 });
@@ -10405,7 +10688,7 @@ __export(event_id_svelte_exports, {
 var css$23, Timeline, css$15, Accordion, css21, U5Bevent_idu5D;
 var init_event_id_svelte = __esm({
   ".svelte-kit/output/server/entries/pages/event/_event_id_.svelte.js"() {
-    init_index_b569d20f();
+    init_index_b8062a89();
     css$23 = {
       code: ".timeline-component.svelte-9ymhoe{position:relative;display:flex;width:60vw;margin:0 auto}.decoration.svelte-9ymhoe{display:flex;flex-direction:column;align-items:center;width:fit-content}.circle.svelte-9ymhoe{width:1rem;height:1rem;border-radius:24px;background:#dab232}.title.svelte-9ymhoe{color:#dab232}.line.svelte-9ymhoe{background-color:azure;width:3px;flex-grow:1}.date-and-title.svelte-9ymhoe{display:flex;gap:1rem;margin-left:1rem}.date.svelte-9ymhoe{color:white;font-weight:800;background:#dab232;border-radius:15px;padding:0 1rem}.title.svelte-9ymhoe{font-weight:800}.description.svelte-9ymhoe{padding:1rem;text-align:justify;margin:0}@media(max-width: 575.98px){.timeline-component.svelte-9ymhoe{width:80vw}}",
       map: null
@@ -10499,8 +10782,8 @@ var entry11, js11, css22;
 var init__11 = __esm({
   ".svelte-kit/output/server/nodes/10.js"() {
     init_event_id_svelte();
-    entry11 = "pages/event/_event_id_.svelte-caa8bfa4.js";
-    js11 = ["pages/event/_event_id_.svelte-caa8bfa4.js", "chunks/vendor-06509e96.js"];
+    entry11 = "pages/event/_event_id_.svelte-4e8c8231.js";
+    js11 = ["pages/event/_event_id_.svelte-4e8c8231.js", "chunks/vendor-23be5db7.js"];
     css22 = ["assets/pages/event/_event_id_.svelte-72423df4.css", "assets/vendor-b3638832.css"];
   }
 });
@@ -10510,13 +10793,13 @@ var login_svelte_exports = {};
 __export(login_svelte_exports, {
   default: () => Login
 });
-var import_axios4, css23, Login;
+var import_axios7, css23, Login;
 var init_login_svelte = __esm({
   ".svelte-kit/output/server/entries/pages/login.svelte.js"() {
-    init_index_b569d20f();
-    import_axios4 = __toModule(require_axios2());
+    init_index_b8062a89();
+    import_axios7 = __toModule(require_axios2());
     css23 = {
-      code: ".svelte-1aakmm7.svelte-1aakmm7{box-sizing:border-box;display:inline-block}a.svelte-1aakmm7.svelte-1aakmm7{color:rgb(77, 53, 212);text-decoration:none}.container.svelte-1aakmm7.svelte-1aakmm7{position:relative;z-index:3;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh}.form-box.svelte-1aakmm7.svelte-1aakmm7{color:white;display:flex;flex-direction:column;gap:0.5rem;background:#11101d;padding:2.5em;width:90%;max-width:37.5em}.form-box.svelte-1aakmm7 .header-text.svelte-1aakmm7{font-size:2em;font-weight:600;padding-bottom:1.875em;text-align:center}.form-box.svelte-1aakmm7 input.svelte-1aakmm7{background:#1d1b31;color:#fff;margin:0.625em 0em;border:none;padding:0.625em;border-radius:5px;width:100%;font-size:1.125em}.form-box.svelte-1aakmm7 input[type='checkbox'].svelte-1aakmm7{display:none}.form-box.svelte-1aakmm7 button.svelte-1aakmm7{background:#1d1b31;color:#fff;border:none;border-radius:5px;cursor:pointer;width:100%;font-size:1.125em;padding:0.625em;margin:1.25em 0em}",
+      code: ".svelte-ayyipx.svelte-ayyipx{box-sizing:border-box;display:inline-block}a.svelte-ayyipx.svelte-ayyipx{color:rgb(77, 53, 212);text-decoration:none}.container.svelte-ayyipx.svelte-ayyipx{position:relative;z-index:3;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh}.form-box.svelte-ayyipx.svelte-ayyipx{color:white;display:flex;flex-direction:column;gap:0.5rem;background:#11101d;padding:2.5em;width:90%;max-width:37.5em}.form-box.svelte-ayyipx .header-text.svelte-ayyipx{font-size:2em;font-weight:600;padding-bottom:1.875em;text-align:center}.form-box.svelte-ayyipx input.svelte-ayyipx{background:#1d1b31;color:#fff;margin:0.625em 0em;border:none;padding:0.625em;border-radius:5px;width:100%;font-size:1.125em}.form-box.svelte-ayyipx input[type='checkbox'].svelte-ayyipx{display:none}.form-box.svelte-ayyipx button.svelte-ayyipx{background:#1d1b31;color:#fff;border:none;border-radius:5px;cursor:pointer;width:100%;font-size:1.125em;padding:0.625em;margin:1.25em 0em;text-align:center;text-transform:capitalize}",
       map: null
     };
     Login = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -10524,12 +10807,12 @@ var init_login_svelte = __esm({
       let password = "";
       $$result.css.add(css23);
       return `${$$result.head += `${$$result.title = `<title>Login Page</title>`, ""}`, ""}
-<div class="${"container svelte-1aakmm7"}"><form class="${"form-box svelte-1aakmm7"}"><div class="${"header-text svelte-1aakmm7"}">Login</div>
-		<input placeholder="${"Your Email Address"}" type="${"text"}" class="${"svelte-1aakmm7"}"${add_attribute("value", email, 0)}>
-		<input placeholder="${"Your Password"}" type="${"password"}" class="${"svelte-1aakmm7"}"${add_attribute("value", password, 0)}>
-		<input id="${"terms"}" type="${"checkbox"}" class="${"svelte-1aakmm7"}">
-		<button type="${"submit"}" class="${"svelte-1aakmm7"}">login</button>
-		<span class="${"svelte-1aakmm7"}">Don&#39;t have an account? <a href="${"/register"}" class="${"svelte-1aakmm7"}">Register</a></span></form>
+<div class="${"container svelte-ayyipx"}"><form class="${"form-box svelte-ayyipx"}"><div class="${"header-text svelte-ayyipx"}">Login</div>
+		<input placeholder="${"Your Email Address"}" type="${"text"}" class="${"svelte-ayyipx"}"${add_attribute("value", email, 0)}>
+		<input placeholder="${"Your Password"}" type="${"password"}" class="${"svelte-ayyipx"}"${add_attribute("value", password, 0)}>
+		<input id="${"terms"}" type="${"checkbox"}" class="${"svelte-ayyipx"}">
+		<button type="${"submit"}" class="${"svelte-ayyipx"}">login</button>
+		<span class="${"svelte-ayyipx"}">Don&#39;t have an account? <a href="${"/register"}" class="${"svelte-ayyipx"}">Register</a></span></form>
 </div>`;
     });
   }
@@ -10547,9 +10830,9 @@ var entry12, js12, css24;
 var init__12 = __esm({
   ".svelte-kit/output/server/nodes/11.js"() {
     init_login_svelte();
-    entry12 = "pages/login.svelte-cb392318.js";
-    js12 = ["pages/login.svelte-cb392318.js", "chunks/vendor-06509e96.js", "chunks/userContext-4c3336d7.js"];
-    css24 = ["assets/pages/login.svelte-870cfa9e.css", "assets/vendor-b3638832.css"];
+    entry12 = "pages/login.svelte-ad7a7bdc.js";
+    js12 = ["pages/login.svelte-ad7a7bdc.js", "chunks/vendor-23be5db7.js", "chunks/userContext-5265bf25.js"];
+    css24 = ["assets/pages/login.svelte-eeff37a2.css", "assets/vendor-b3638832.css"];
   }
 });
 
@@ -10600,7 +10883,7 @@ function getRawBody(req) {
 }
 
 // .svelte-kit/output/server/app.js
-init_index_b569d20f();
+init_index_b8062a89();
 var __accessCheck2 = (obj, member, msg) => {
   if (!member.has(obj))
     throw TypeError("Cannot " + msg);
@@ -12096,7 +12379,7 @@ var manifest = {
   assets: new Set(["favicon.ico", "favicon.jpg", "home/bootcamp.png", "home/build.svg", "home/circle.svg", "home/collegacy-logo.svg", "home/curved-our-value.svg", "home/design-team-icon.svg", "home/dummy-ig-post.png", "home/inspire.svg", "home/learn-more-btn.svg", "home/medpar-1.png", "home/medpar-2.jpg", "home/medpar-3.png", "home/medpar-4.png", "home/medpar-5.png", "home/medpar-6.png", "home/post-1.jpg", "home/post-2.jpg", "home/post-3.jpg", "home/sponsor-1.png", "home/sponsor-2.png", "home/summit.png", "home/upload-icon.svg", "shared/email.svg", "shared/instagram.svg", "shared/linkedin.svg", "shared/logo-collegacy.png", "shared/logo-collegacy.svg"]),
   _: {
     mime: { ".ico": "image/vnd.microsoft.icon", ".jpg": "image/jpeg", ".png": "image/png", ".svg": "image/svg+xml" },
-    entry: { "file": "start-6a982b75.js", "js": ["start-6a982b75.js", "chunks/vendor-06509e96.js", "chunks/preload-helper-ec9aa979.js"], "css": ["assets/start-61d1577b.css", "assets/vendor-b3638832.css"] },
+    entry: { "file": "start-69f147bf.js", "js": ["start-69f147bf.js", "chunks/vendor-23be5db7.js", "chunks/preload-helper-ec9aa979.js", "chunks/singletons-12a22614.js"], "css": ["assets/start-61d1577b.css", "assets/vendor-b3638832.css"] },
     nodes: [
       () => Promise.resolve().then(() => (init__(), __exports)),
       () => Promise.resolve().then(() => (init__2(), __exports2)),

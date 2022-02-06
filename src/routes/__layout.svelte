@@ -30,7 +30,10 @@
 		// toLink('bx-cog', 'Setting', '/admin')
 	];
 
-	let restrictedLinks = [toLink('bx-grid-alt', 'Dashboard', '/dashboard')];
+	let restrictedLinks = [
+		toLink('bx-grid-alt', 'Dashboard', '/dashboard'),
+		toLink('bx-user', 'Profile', '/profile')
+	];
 
 	$: sidebarClass = open ? 'sidebar open' : 'sidebar';
 	$: btnClass = open ? 'bx bx-menu-alt-right' : 'bx bx-menu';
@@ -90,7 +93,7 @@
 	<div class="navbar" style={open ? 'width: calc(100% - 249px);' : 'width:calc(100% - 77px);'}>
 		{#if width > 1200}
 			<span>{pageDisplayName}</span>
-			{#if $userContext === undefined || $userContext === null}
+			<!-- {#if $userContext === undefined || $userContext === null}
 				<a href="/login">
 					<i class="bx bxs-log-in" />
 					<span class="links_name">Login</span>
@@ -100,7 +103,7 @@
 					<i class="bx bxs-log-out" />
 					<span class="links_name">Logout</span>
 				</a>
-			{/if}
+			{/if} -->
 		{/if}
 	</div>
 	<div style={width > 1200 ? 'padding-left: 78px;margin-top: 60px;' : 'margin-top: 60px;'}>

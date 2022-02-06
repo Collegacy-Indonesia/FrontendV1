@@ -1,14 +1,47 @@
-<div class="card">
-	<div class="image-wrapper">
-		<img src="/home/summit.png" alt="Summit" />
-	</div>
-	<div class="details">
-		Collegacy Summit
-		<div class="wrapper-button">
-			<a class="register" href="/dashboard/summit">Register Now</a>
+<script>
+	import ApiService from '../../utils/api';
+	import { userContext, getUserProfile } from '../../contexts/userContext';
+	import Loading from '../shared/loading.svelte';
+
+	const checkIfRegistered = async () => {
+		const apiSrv = new ApiService(`/users/registered-summit/${$userContext.id}`);
+		var registered = false;
+		try {
+			registered = !(await apiSrv.getData()) ? false : true;
+		} catch (_) {
+			registered = false;
+		}
+		return registered;
+	};
+</script>
+
+{#await getUserProfile()}
+	<Loading />
+{:then _}
+	{#await checkIfRegistered() then registered}
+		<div class="card">
+			<div class="image-wrapper">
+				<img src="/home/summit.png" alt="Summit" />
+			</div>
+			<div class="details">
+				Collegacy Summit
+				{#if registered}
+					<div class="wrapper-button">
+						<button class="registered" disabled={true}>Registered</button>
+					</div>
+				{:else}
+					<div class="wrapper-button">
+						<a class="register" href="/dashboard/summit">Register Now</a>
+					</div>
+				{/if}
+			</div>
 		</div>
-	</div>
-</div>
+	{:catch err}
+		<div>{err.toString()}</div>
+	{/await}
+{:catch err}
+	<div>{err.toString()}</div>
+{/await}
 
 <style>
 	.image-wrapper > img {
@@ -53,6 +86,16 @@
 		background: transparent;
 		border: 1px solid blue;
 		color: blue;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 0.8rem;
+		padding: 0.5rem;
+	}
+
+	.registered {
+		background: transparent;
+		border: 1px solid black;
+		color: black;
 		border-radius: 5px;
 		cursor: pointer;
 		font-size: 0.8rem;

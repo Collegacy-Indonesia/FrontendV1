@@ -10,30 +10,48 @@ class ApiService {
 		this.errMsg = errMsg;
 	}
 
-	async reqToken(email: string, password: string) {
+	async reqToken(email: string, password: string, full_name?: string, isRegister = false) {
 		if (this.hasToken()) {
 			return;
 		}
 		try {
-			const { data } = await axios({
-				method: 'POST',
-				url: this.API_URL + this.path,
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-					'Content-Type': 'application/json'
-				},
-				responseType: 'json',
-				data: {
-					email,
-					password
-				}
-			});
-			console.log(data);
-			this.setLocalStorage(data.token, data.refresh_token);
+			let authData;
+			if (!isRegister) {
+				const { data } = await axios({
+					method: 'POST',
+					url: this.API_URL + this.path,
+					headers: {
+						'Access-Control-Allow-Origin': '*',
+						'Content-Type': 'application/json'
+					},
+					responseType: 'json',
+					data: {
+						email,
+						password,
+						full_name
+					}
+				});
+				authData = data;
+			} else {
+				const { data } = await axios({
+					method: 'POST',
+					url: this.API_URL + this.path,
+					headers: {
+						'Access-Control-Allow-Origin': '*',
+						'Content-Type': 'application/json'
+					},
+					responseType: 'json',
+					data: {
+						email,
+						password
+					}
+				});
+				authData = data;
+			}
+			this.setLocalStorage(authData.token, authData.refresh_token);
 			this.displayToken();
 			return true;
 		} catch (err) {
-			console.log(err);
 			alert(this.errMsg);
 			return false;
 		}
@@ -56,20 +74,17 @@ class ApiService {
 				},
 				responseType: 'json'
 			});
-			console.log(res);
 			return res.data;
 		} catch (err) {
-			console.log(err);
-
 			if (fromRefreshToken) {
-				throw 'your token is invalid';
+				throw err;
 			} else {
-        try {
-          await this.refreshToken();
-          return this.getData(true);
-        } catch (err) {
-          throw err;
-        }
+				try {
+					await this.refreshToken();
+					return this.getData(true);
+				} catch (err) {
+					throw err;
+				}
 			}
 		}
 	}
@@ -92,20 +107,17 @@ class ApiService {
 				data: payload,
 				responseType: 'json'
 			});
-			console.log(res);
 			return res.data;
 		} catch (err) {
-			console.log(err);
-
 			if (fromRefreshToken) {
-        throw 'your token is invalid';
+				throw err.toString();
 			} else {
-        try {
-          await this.refreshToken();
-          return this.postData(payload, true);
-        } catch (err) {
-          throw err;
-        }
+				try {
+					await this.refreshToken();
+					return this.postData(payload, true);
+				} catch (err) {
+					throw err;
+				}
 			}
 		}
 	}
@@ -135,14 +147,14 @@ class ApiService {
 
 			if (fromRefreshToken) {
 				// return undefined;
-        throw 'your token is invalid';
+				throw 'your token is invalid';
 			} else {
-        try {
-          await this.refreshToken();
-          return this.putData(id, payload, true);
-        } catch (err) {
-          throw err;
-        }
+				try {
+					await this.refreshToken();
+					return this.putData(id, payload, true);
+				} catch (err) {
+					throw err;
+				}
 			}
 		}
 	}
@@ -172,12 +184,12 @@ class ApiService {
 			if (fromRefreshToken) {
 				throw 'your token is invalid';
 			} else {
-        try {
-          await this.refreshToken();
-          return this.deleteData(id, true);
-        } catch (err) {
-          throw err;
-        }
+				try {
+					await this.refreshToken();
+					return this.deleteData(id, true);
+				} catch (err) {
+					throw err;
+				}
 			}
 		}
 	}
@@ -197,11 +209,10 @@ class ApiService {
 					refresh_token: localStorage.getItem('refresh_token')
 				}
 			});
-			console.log(data);
 			this.setLocalStorage(data.token, data.refresh_token);
 			this.displayToken();
 		} catch (err) {
-			console.log(err);
+			throw err;
 		}
 	}
 

@@ -1,8 +1,15 @@
 <script>
 	import ApiService from '../../utils/api';
 
-	import { radio, radioItems, text, textArea } from '../../components/admin/form_dto';
+	import { radio, radioItems, text } from '../../components/admin/form_dto';
+	import { goto } from '$app/navigation';
+	import { getUserProfile, logout, userContext } from '../../contexts/userContext';
 	import Form from '../../components/shared/form-generator.svelte';
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		getUserProfile();
+	});
 </script>
 
 <div class="main-container">
@@ -21,40 +28,13 @@
 			const apiSrv = new ApiService('/summit-registrants');
 			try {
 				delete values.touched;
-				await apiSrv.postData(values);
+				await apiSrv.postData({ ...values, user_id: $userContext.id });
+				goto('/dashboard');
 			} catch (err) {
 				alert(err.toString());
 			}
 		}}
 		fields={[
-			text('text', {
-				id: 'nama',
-				name: 'nama',
-				label: 'Nama',
-				required: true,
-				placeholder: 'ex: Farhan Renaldi',
-			}),
-			text('text', {
-				id: 'no_hp',
-				name: 'no_hp',
-				label: 'Nomor Handphone (WA)',
-				required: true,
-				placeholder: 'ex: 081234567890'
-			}),
-			text('text', {
-				id: 'univ',
-				name: 'universitas',
-				label: 'Asal Universitas',
-				required: true,
-				placeholder: 'ex: Institut Teknologi Sepuluh Nopember'
-			}),
-			text('text', {
-				id: 'jurusan',
-				name: 'jurusan',
-				label: 'Asal Jurusan',
-				required: true,
-				placeholder: 'ex: Teknik Dirgantara'
-			}),
 			radio(
 				[
 					radioItems('2021', '2021', 2021),
@@ -80,13 +60,18 @@
 					id: 'role'
 				}
 			),
-			text('text',{
-				id: 'uname_ig',
-				name: 'uname_ig',
-				label: 'Username Instagram',
-				required: true,
-				placeholder: 'ex: @farhanrenaldi',
-			}),
+			radio(
+				[
+					radioItems('education', 'Education', 'education'),
+					radioItems('health_care', 'Health Care', 'health_care'),
+					radioItems('sme', 'SME', 'sme')
+				],
+				{
+					name: 'case',
+					label: 'Case',
+					id: 'case'
+				}
+			),
 			text('text', {
 				id: 'link_drive',
 				name: 'link_drive',
@@ -95,13 +80,13 @@
 				required: true,
 				placeholder: ''
 			}),
-			text('text',{
+			text('text', {
 				id: 'ref_code',
 				name: 'ref_code',
 				label: 'Referral Code',
 				required: false,
 				// TODO: change format referral code below to be collegacy referral code format
-				placeholder: 'ex: ABC123',
+				placeholder: 'ex: ABC123'
 			})
 		]}
 	/>
