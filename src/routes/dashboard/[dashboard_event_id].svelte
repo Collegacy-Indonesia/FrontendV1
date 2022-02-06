@@ -28,6 +28,13 @@
 		}}
 		fields={[
 			text('text', {
+				id: 'nama',
+				name: 'nama',
+				label: 'Nama',
+				required: true,
+				placeholder: 'ex: Farhan Renaldi',
+			}),
+			text('text', {
 				id: 'no_hp',
 				name: 'no_hp',
 				label: 'Nomor Handphone (WA)',
@@ -73,6 +80,13 @@
 					id: 'role'
 				}
 			),
+			text('text',{
+				id: 'uname_ig',
+				name: 'uname_ig',
+				label: 'Username Instagram',
+				required: true,
+				placeholder: 'ex: @farhanrenaldi',
+			}),
 			text('text', {
 				id: 'link_drive',
 				name: 'link_drive',
@@ -80,6 +94,14 @@
 					'Link drive berisi bukti follow akun instagram @collegacyindonesia, upload twibbon, bukti pembayaran',
 				required: true,
 				placeholder: ''
+			}),
+			text('text',{
+				id: 'ref_code',
+				name: 'ref_code',
+				label: 'Referral Code',
+				required: false,
+				// TODO: change format referral code below to be collegacy referral code format
+				placeholder: 'ex: ABC123',
 			})
 		]}
 	/>
