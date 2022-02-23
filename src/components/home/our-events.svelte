@@ -5,14 +5,8 @@
 		{
 			title: 'Summit',
 			desc: `Collegacy The Summit is a business competition held for college students to introduce and sharpen entrepreneurship skills with the hope the participants can create their startup. The competition will run as a combination of the hackathon and business competition. So, the participant can create an innovative startup within the Minimum Viable Product (MVP). This year's theme is "Shape The Future World through Innovation-Driven Entrepreneurship in The Society 5.0”.`,
-			link: 'https://forms.gle/f6XiAPihDt38uG4GA',
+			link: 'https://forms.gle/aWNfFHiqGPPAmFwy9',
 			img: '/home/summit.png'
-		},
-		{
-			title: 'Bootcamp',
-			desc: 'Collegacy Students Bootcamp is a two-week bootcamp designed to provide knowledge to enthusiastic participants in developing their ideas and innovations. According to our grand theme, "Cultivating the Spirit of Ideation to Shape the Future World for Achieving Sustainable Development Goals", this event aims to empower university students as participants to execute their ideas well with proper planning to make them better.',
-			link: 'https://docs.google.com/forms/d/1mvddAUP4Mw7O_Dt3VOEeEkPSVV2j6BKx2a9JBJo6Hb4/edit?usp=drivesdk',
-			img: '/home/bootcamp.png'
 		}
 	];
 	let width;
@@ -53,7 +47,7 @@
 							{#if !isComingSoon}
 								<p class="text-justify">{desc}</p>
 								<a href={link}>
-									<button class="btn btn-more">Register</button>
+									<button class="btn btn-more">Submit Your Proposal</button>
 								</a>
 							{:else}
 								<p class="text-justify bold">Coming Soon</p>
