@@ -75,8 +75,8 @@
 		color: #000000;
 	}
 	.instagram-post-card {
-		width: 379px;
-		height: 379px;
+    width: 350px;
+    height: 350px;
 		filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 		border-radius: 3.3rem;
 		transition: all 0.3s ease-in-out;

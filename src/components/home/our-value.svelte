@@ -59,7 +59,7 @@
 	}
 	.learn-more-btn {
 		top: -100px;
-		right: 11.5vw;
+		right: 10.2vw;
 		cursor: pointer;
 	}
 	.header > h1 {
