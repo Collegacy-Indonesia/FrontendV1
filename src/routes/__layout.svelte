@@ -106,7 +106,7 @@
 			{/if} -->
 		{/if}
 	</div>
-	<div style={width > 1200 ? 'padding-left: 78px;margin-top: 60px;' : 'margin-top: 60px;'}>
+	<div style={width > 1200 ? 'padding-left: 78px;margin-top: 60px;' : 'margin-top: 60px;'} class="body">
 		<slot />
 	</div>
 	<Footer />
@@ -361,6 +361,9 @@
 	.navbar a:hover i {
 		transition: all 0.5s ease;
 		color: #11101d;
+	}
+	.body {
+		min-height: 100vh;
 	}
 	@media (max-width: 420px) {
 		.sidebar li .tooltip {
