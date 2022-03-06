@@ -2,9 +2,10 @@
 	export let avatar;
 	export let name;
 	export let lastMsg;
+	export let chat_id;
 </script>
 
-<div class="recent-chat-container d-flex">
+<a class="recent-chat-container d-flex" href={'/chat/' + chat_id}>
 	<div class="avatar-container">
 		<img src={avatar} alt={name + ' avatar'} />
 	</div>
@@ -12,7 +13,7 @@
 		<h1>{name}</h1>
 		<h2>{lastMsg}</h2>
 	</div>
-</div>
+</a>
 
 <style>
 	* {
@@ -23,7 +24,11 @@
 		background: #f7f5e9;
 		box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 		border-radius: 16px;
-    margin: 1.5rem 0;
+		margin: 1.5rem 0;
+		text-decoration: none;
+	}
+	.text-container:hover {
+		text-decoration: none;
 	}
 	.avatar-container {
 		width: 86px;
@@ -34,9 +39,9 @@
 		height: 100%;
 		border-radius: 16px;
 	}
-  .text-container {
-    margin-left: 20px;
-  }
+	.text-container {
+		margin-left: 20px;
+	}
 	.text-container > h1 {
 		font-weight: bold;
 		font-size: 1.8125rem;
@@ -46,7 +51,7 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		width: 500px;
-		max-width: 40vw;    
+		max-width: 40vw;
 	}
 	.text-container > h2 {
 		font-style: italic;
